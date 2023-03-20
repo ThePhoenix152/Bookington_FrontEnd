@@ -4,9 +4,8 @@
 }
 @using Bookington_FE.Models.ResponseModel;
 @model CourtResponse
-<style>
+<link rel="stylesheet" href=@Url.Content("~/css/OwnerDropdown.css")>
 
-</style>
 
 <section>
     <div id="ManageYard" class="tabcontent" style="display:block">
@@ -16,10 +15,27 @@
             <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
         </div>
         <div class="row">
-            <div class="col-9">Total court: @Model.pagination.totalCounts</div>
+            <div class="col-9">Total court: @Model.pagination.totalCount</div>
             <div class="col-2">Page Size:</div>
-            <div class="col-1" style="margin-left:-100px">
+            @*<div class="col-1" style="margin-left:-100px">
                 <input type="number" id="selectPagesize" value="@Model.pagination.maxPageSize" style="max-width: 40px; text-align:center" />
+            </div>*@
+            <div class="col-1" style="margin-left:-100px">
+                <label class="dropdown">
+
+                    <div class="dd-button">
+                        Page size
+                    </div>
+
+                    <input type="checkbox" class="dd-input" id="test">
+
+                    <ul class="dd-menu">
+                        <li>5</li>
+                        <li>10</li>
+                        <li>15</li>
+                    </ul>
+
+                </label>
             </div>
         </div>
         <table id="example" class="table table-striped" style="width:100%">

@@ -115,8 +115,8 @@
 	transform: rotate(-90deg);
 }
 
-/* Start dropdown menu */
-/*.sidebar ul .sidebar-dropdown {
+ /*Start dropdown menu*/
+.sidebar ul .sidebar-dropdown {
 	padding-top: 10px;
 	padding-left: 30px;
 	display: none;
@@ -129,10 +129,10 @@
   font-size: .85rem;
 	padding: .5rem 0;
 	display: block;
-}*/
-/* End dropdown menu */
+}
+ End dropdown menu 
 
-/*.show-sidebar {
+.show-sidebar {
 	transform: translateX(-270px);
 }
 
@@ -145,7 +145,7 @@
 	.sidebar .search {
 		padding: 10px 0 10px 30px
 	}
-}*/
+}
 
 
 

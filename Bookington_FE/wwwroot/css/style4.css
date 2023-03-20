@@ -26,12 +26,14 @@ body {
 }
 
 nav {
-    display: flex;
+    z-index: 1;
+    display: flex !important;
     align-items: center;
     background: #90bbdd;
-    height: 60px;
-    position: relative;
-    border-bottom: 1px solid #495057
+    height: 3rem;
+    position: fixed;
+    border-bottom: 1px solid #495057;
+    width: 100%;
 }
 
 .icon {
@@ -133,6 +135,7 @@ nav {
         height: 100%;
         background: #e0ded7;
         padding: 30px 0;
+        margin-top:3rem;
     }
 
         .wrapper .sidebar h2 {
@@ -223,6 +226,7 @@ nav {
         }
 
 .tabcontent {
+    margin-top: 3rem;
     display: block;
     padding: 6px 12px;
     border: 1px solid #ccc;
