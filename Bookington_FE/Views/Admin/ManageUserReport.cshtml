@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewData["Title"] = "ManagerUserReport";
+	Layout = "_LayoutAdminPage";
+}
+@using Bookington_FE.Models.ResponseModel;
+@model List<UserReportModel>
+<section>
+<div id="ManageUserReport" class="tabcontent" style="display:block">
+			  <h3>Manage Report</h3>
+			  <table id="example" class="table table-striped" style="width:100%">
+					  <thead>
+						  <tr>
+							  <th>ID</th>
+							  <th>RefCourt</th>
+							  <th>Report ID</th>
+							  <th>Content</th>
+							  <th>Action</th>
+
+						  </tr>
+					  </thead>
+					  <tbody>
+				@foreach (var item in Model)
+                        {
+                                <tr>
+                                  <th>@item.Id</th>
+                                  <th>@item.RefUser</th>
+                                  <th>@item.ReporterId</th>
+                                  <th>@item.Content</th>
+								  <th>
+									<button class="btn-primary">Edit</button>
+							<button class="alert-danger" onclick="DeleteCourtReport('@item.Id')">Delete</button>
+
+
+								  </th>
+								  </tr>
+						}
+					  </tbody>
+					  
+				  </table>
+    </div>
+</section>
+<div class="modal fade" id="delusermodal" style="margin-top:100px">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Warning!</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				`
+			</div>
+
+			<div class="modal-body">
+				Are you sure to delete this report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmDelUR">OK</button>
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="CancelRemove">Cancel</button>
+			</div>
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "UserManager";
+    Layout = "_LayoutAdminPage";
+}
+@using Bookington_FE.Models.ResponseModel;
+@model List<AccountModel>
+<section>
+    <div id="ManageUsers" class="tabcontent" style="display:block">
+        <h3>Manage Users</h3>
+        
+        <table id="example" class="table table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Role Name</th>
+                    <th>Phone</th>
+                    <th>Date Of Birth</th>
+                    <th>Full Name</th>
+                    <th>Create At</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    @if(!item.IsDeleted)
+                    {
+                        <tr>
+                            <th>@item.Id</th>
+                            <th>@item.RoleName</th>
+                            <th>@item.Phone</th>
+                            <th>@item.DateOfBirth</th>
+                            <th>@item.FullName</th>
+
+                            <th>@item.CreateAt</th>
+                            @if (item.IsActive)
+                            {
+                                <th>Active</th>
+                            }
+                            else
+                            {
+                                <th>InActive</th>
+                            }
+                            <th>
+                                <button class="btn btn-primary" onclick="UpdateUser('@item.Id','@item.FullName','@item.DateOfBirth')">Edit</button>
+                                <button class="btn btn-danger" onclick="DeleteUser('@item.Id','@item.FullName')">Delete</button>
+                                @*<button type="button" class="btn btn-info btn-lg" onclick="DeleteUser('@item.id','@item.fullName')">Open Modal</button>*@
+                            </th>
+                        </tr>
+                    }                    
+                }
+
+            </tbody>
+        </table>
+    </div>    
+</section>
+<!--The Model show popup edit user-->
+<!-- Modal -->
+
+@*Delete User*@
+<div class="modal fade" id="delusermodal" style="margin-top:100px">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warning!</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+`            </div>
+
+            <div class="modal-body" id="nameUserDel">
+                Are you sure to delete user <span></span>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmDel()">OK</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="CancelRemove">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@*Update User*@
+<div class="modal fade" id="upusermodal" style="margin-top:100px">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update User</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="nameUserUpdate">
+                <div>
+                    <label class="small mb-1" for="inputUpUserName">Full name</label>
+                    <input class="form-control" id="inputUpUserName" type="text" placeholder="Enter user's name" value="">
+                </div>
+            </div>
+            <div class="modal-body" id="dobUserUpdate">
+
+                <div>
+                    <label class="small mb-1" for="inputUpUserDOB">Date Of Birth</label>
+                    <input class="form-control" id="inputUpUserDOB" type="text" placeholder="Enter user's date of birth" value="">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkUpdate" onclick="Update()">OK</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="Cancel">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
