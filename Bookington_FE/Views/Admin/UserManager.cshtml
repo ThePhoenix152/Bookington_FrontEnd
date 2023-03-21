@@ -3,11 +3,40 @@
     Layout = "_LayoutAdminPage";
 }
 @using Bookington_FE.Models.ResponseModel;
-@model List<AccountModel>
+@model AccountResponse
+<link rel="stylesheet" href=@Url.Content("~/css/OwnerDropdown.css")>
+
 <section>
     <div id="ManageUsers" class="tabcontent" style="display:block">
         <h3>Manage Users</h3>
-        
+        <div class="input-group" style="width:30%">
+            <input type="search" id="searchUserTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+            <button type="button" class=" btn btn-dark" onclick="btnSearchUserClick()">search</button>
+        </div>
+        <div class="row">
+            <div class="col-9">Total court: @Model.pagination.totalCount </div>
+            <div class="col-2">Page Size:</div>
+            @*<div class="col-1" style="margin-left:-100px">
+            <input type="number" id="selectPagesize" value="@Model.pagination.maxPageSize" style="max-width: 40px; text-align:center" />
+            </div>*@
+            <div class="col-1" style="margin-left:-100px">
+                <label class="dropdownc">
+
+                    <div class="dd-button" id="pageSizeLabU">
+                        <span>@Model.pagination.maxPageSize</span>
+                    </div>
+
+                    <input type="checkbox" class="dd-input" id="test">
+
+                    <ul class="dd-menu">
+                        <li onclick="SetPageSizeU(5)">5</li>
+                        <li onclick="SetPageSizeU(10)">10</li>
+                        <li onclick="SetPageSizeU(15)">15</li>
+                    </ul>
+
+                </label>
+            </div>
+        </div>
         <table id="example" class="table table-striped" style="width:100%">
             <thead>
                 <tr>
@@ -22,7 +51,8 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @if (Model.result != null && Model.result.Count > 0)
+                    @foreach (var item in Model.result)
                 {
                     @if(!item.IsDeleted)
                     {
@@ -53,6 +83,72 @@
 
             </tbody>
         </table>
+        <nav aria-label="Page navigation example" style="background :#ffffff; margin:0; position:relative">
+            <ul class="pagination">
+                @if (Model.pagination.hasPrevious)
+                {
+                    <li class="page-item">
+                        <button class="page-link" aria-label="Previous" onclick="btnPreviousClick()">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </button>
+                    </li>
+                }
+                @if (Model.pagination.totalCount > 0)
+                {
+                    int totalPage = Model.pagination.totalPages;
+                    int curPage = Model.pagination.currentPage;
+                    int pageshow = 0;
+                    int preMaxPage = 0;
+                    int nextMaxPage = 0;
+                    //
+                    if (!Model.pagination.hasPrevious)
+                    {
+                        preMaxPage = 1;
+                        if (totalPage - 3 > 0)
+                            nextMaxPage = 3;
+                        else
+                            nextMaxPage = totalPage;
+                    }
+                    else
+                    {
+                        if (Model.pagination.hasNext)
+                        {
+                            preMaxPage = curPage - 1;
+                            nextMaxPage = curPage + 1;
+                        }
+                        else
+                        {
+                            nextMaxPage = totalPage;
+                            preMaxPage = totalPage - 2;
+                        }
+                    }
+                    for (int i = preMaxPage; i <= nextMaxPage; i++)
+                    {
+                        if (i == curPage)
+                        {
+                            <li class="page-item"><button class="page-link" style="color:red" onclick="btnNumbpageClick(@i)">@i</button></li>
+                        }
+                        else
+                        {
+                            <li class="page-item"><button class="page-link" onclick="btnNumbpageClick(@i)">@i</button></li>
+                        }
+                        pageshow++;
+                    }
+
+                }
+
+                @if (Model.pagination.hasNext)
+                {
+                    <li class="page-item">
+                        <button class="page-link" aria-label="Next" onclick="btnNextClick()">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </button>
+                    </li>
+                }
+            </ul>
+        </nav>
     </div>    
 </section>
 <!--The Model show popup edit user-->
@@ -112,3 +208,11 @@
 </div>
 
 
+@if (Model.pagination.totalCount > 0)
+{
+    <script type="text/javascript">
+        window.onload = function () {
+            SetPageNumAndSizeU(@Model.pagination.currentPage, @Model.pagination.maxPageSize);
+        };
+    </script>
+}

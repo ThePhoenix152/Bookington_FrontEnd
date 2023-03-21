@@ -21,18 +21,18 @@
                 <input type="number" id="selectPagesize" value="@Model.pagination.maxPageSize" style="max-width: 40px; text-align:center" />
             </div>*@
             <div class="col-1" style="margin-left:-100px">
-                <label class="dropdown">
+                <label class="dropdownc">
 
-                    <div class="dd-button">
-                        Page size
+                    <div class="dd-button" id="pageSizeLab">
+                        <span>@Model.pagination.maxPageSize</span>
                     </div>
 
                     <input type="checkbox" class="dd-input" id="test">
 
                     <ul class="dd-menu">
-                        <li>5</li>
-                        <li>10</li>
-                        <li>15</li>
+                        <li onclick="SetPageSize(5)">5</li>
+                        <li onclick="SetPageSize(10)">10</li>
+                        <li onclick="SetPageSize(15)">15</li>
                     </ul>
 
                 </label>
@@ -74,7 +74,7 @@
             </tbody>
 
         </table>
-        <nav aria-label="Page navigation example" style="background :#ffffff">
+        <nav aria-label="Page navigation example" style="background :#ffffff; margin:0; position:relative">
             <ul class="pagination">
                 @if (Model.pagination.hasPrevious)
                 {

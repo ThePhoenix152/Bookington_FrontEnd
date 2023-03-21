@@ -34,33 +34,57 @@ namespace Bookington_FE.Controllers
             //
             return View();
         }
-        public IActionResult UserManager()
+        public IActionResult UserManager(string searchText = "", int currentPage = 1, int pageSize = 10)
         {
 
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "owner")
+            if (sessAcount == null || sessAcount.result.role == "onwer")
             {
                 return RedirectToAction("Login", "Home");
-            }
-            //
+            } 
+            //getUser by query
             AccountResponse res = null;
             string resJsonStr = string.Empty;
             try
             {
                 string link = ConfigAppSetting.Api_Link + "accounts/query";
+                string param = "";
+                if (!string.IsNullOrEmpty(searchText))
+                {
+                    param = "SearchText=" + searchText;
+                }
+                //
+                if (currentPage > 0)
+                {
+                    if (!string.IsNullOrEmpty(param))
+                        param += "&PageNumber=" + currentPage;
+                    else
+                        param += "PageNumber=" + currentPage;
+                }
+                //
+                if (pageSize > 0)
+                {
+                    if (!string.IsNullOrEmpty(param))
+                        param += "&MaxPageSize=" + pageSize;
+                    else
+                        param += "MaxPageSize=" + pageSize;
+                }
+                //
+                if (!string.IsNullOrEmpty(param))
+                    link += "?" + param;
                 resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
                 //
                 res = JsonConvert.DeserializeObject<AccountResponse>(resJsonStr);
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
             //
-            return View(res?.result);
+            return View(res);
         }
+
         public IActionResult ManageCourtReport()
         {
 

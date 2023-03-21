@@ -230,8 +230,10 @@ function UpdateC() {
         }
     })
 }
-function SetPageSize() {
-
+function SetPageSize(size) {
+    _pageSize = parseInt(size);
+    $('#pageSizeLab span').text(size);
+    SearchCourt();
 }
 function btnPreviousClick() {
     if (_currentPage > 1) {
@@ -273,3 +275,38 @@ function DetailCourt(id) {
     _idCourt_detail = id;
     $('#subcourtmodal').modal("show");
 }
+
+function SetPageSizeU(size) {
+    _pageSize = parseInt(size);
+    $('#pageSizeLabU span').text(size);
+    SearchUser();
+}
+function btnPreviousClickU() {
+    if (_currentPage > 1) {
+        _currentPage = _currentPage - 1;
+    }
+    SearchUser();
+}
+function btnNextClickU() {
+    _currentPage = _currentPage + 1;
+    SearchUser();
+}
+function btnNumbpageClickU(pageNum) {
+    if (_currentPage != pageNum) {
+        _currentPage = parseInt(pageNum);
+        SearchUser();
+    }
+}
+function SetPageNumAndSizeU(currPage, pageSize) {
+    _currentPage = parseInt(currPage);
+    _pageSize = parseInt(pageSize);
+}
+function btnSearchUserClick() {
+    _currentPage = parseInt(1);
+    SearchUser();
+}
+function SearchUser() {
+    var searchText = $("#searchUserTxt").val();
+    window.location.href = 'https://localhost:7216/Admin/UserManager?searchText=' + searchText + '&currentPage=' + _currentPage + '&pageSize=' + _pageSize;
+}
+
