@@ -121,9 +121,9 @@ function UpdateUser(uid, uname, udob) {
     debugger
     _idUser_up = uid;
     //
-    $('#inputUpUserName').val(uname);
-    $('#inputUpUserDOB').val(udob);
-    $('#upusermodal').modal("show");
+    ('#inputUpUserName').val(uname);
+    ('#inputUpUserDOB').val(udob);
+  ('#upusermodal').modal("show");
 }
 function Update() {
     var nameUser_up = $('#inputUpUserName').val();
@@ -147,7 +147,7 @@ function Update() {
 }
 function AddUser() {
     debugger
-    $('#addusermodal').modal("show");
+   ('#addusermodal').modal("show");
 }
 function ConfirmAdd() {
     var _nameUser_add = $('#inputAddUserName').val();
@@ -200,8 +200,8 @@ function UpdateCourt(cid, coid, cdid, cname, caddress, copen, cclose) {
     //
     $('#inputUpCourtOwnerID').val(coid)
     $('#inputUpCourtName').val(cname)
-    $('#inputUpCourtDistrictID').val(cdid)
-    $('#inputUpCourtAddress').val(caddress)
+    $('inputUpCourtDistrictID').val(cdid)
+    $('inputUpCourtAddress').val(caddress)
     $('#inputUpCourtOpen').val(copen)
     $('#inputUpCourtClose').val(cclose)
     $('#upcourtmodal').modal("show");
@@ -310,3 +310,7 @@ function SearchUser() {
     window.location.href = 'https://localhost:7216/Admin/UserManager?searchText=' + searchText + '&currentPage=' + _currentPage + '&pageSize=' + _pageSize;
 }
 
+function DetailCompe(id) {
+    _idCourt_detail = id;
+    $('#detailcompe').modal("show");
+}

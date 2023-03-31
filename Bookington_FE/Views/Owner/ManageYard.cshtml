@@ -4,7 +4,7 @@
 }
 @using Bookington_FE.Models.ResponseModel;
 @model CourtResponse
-<link rel="stylesheet" href=@Url.Content("~/css/OwnerDropdown.css")>
+<link rel="stylesheet" href=@Url.Content("~/Asset/css/OwnerDropdown.css")>
 
 
 <section>
@@ -170,16 +170,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 `
             </div>
-            <div class="modal-body" id="ownerIDCourtUpdate" style="padding: 0 11px 0 11px">
-                <div>
-                    <label class="small mb-1" for="inputUpCourtOwnerID">Owner ID</label>
-                    <input class="form-control" id="inputUpCourtOwnerID" type="text" placeholder="Enter court's owner ID" value="">
-                </div>
-            </div>
+            
             <div class="modal-body" id="nameCourtUpdate" style="padding: 0 11px 0 11px">
                 <div>
-                    <label class="small mb-1" for="inputUpCourtName">Name</label>
-                    <input class="form-control" id="inputUpCourtName" type="text" placeholder="Enter court's name" value="">
+                    <label class="small mb-1" for="inputUpCourtOwnerID">Owner ID</label>
+                    <input class="form-control" id="inputUpCourtOwnerID" type="text" placeholder="Enter court's name" value="">
                 </div>
             </div>
             <div class="modal-body" id="districtIDCourtUpdate" style="padding: 0 11px 0 11px">

@@ -5,3 +5,8 @@
 @using Bookington_FE.Models.ResponseModel;
 @model AuthLoginResponse;
 <h1>HELLO @Model.result.fullName</h1>
+<script>
+    connection.on("ReceiveNotification", function (user, message) {
+        // Show the notification.
+    })
+</script>

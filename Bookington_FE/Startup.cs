@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using Microsoft.Extensions.FileProviders;
+using System.Configuration;
 
 namespace Bookington_FE
 {
@@ -19,6 +20,7 @@ namespace Bookington_FE
             //
             //Session
             services.AddDistributedMemoryCache();
+            //services.AddCors();
             services.AddSession(cfg =>
             {
                 cfg.Cookie.Name = "Bookington_FE";
@@ -44,12 +46,17 @@ namespace Bookington_FE
             app.UseSession();
             //
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
+            //app.UseStaticFiles();
+            //app.UseCors(opt => opt.WithOrigins("*").AllowAnyMethod().AllowAnyHeader());
             app.UseRouting();
 
             app.UseAuthorization();
-
+            //
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider("D:\\NewWeb\\Bookington_FE\\Bookington_FE\\wwwroot\\Asset"),
+                RequestPath = "/Asset"
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -29,7 +29,7 @@ nav {
     z-index: 1;
     display: flex !important;
     align-items: center;
-    background: #90bbdd;
+    background: #055a9f;
     height: 3rem;
     position: fixed;
     border-bottom: 1px solid #495057;
@@ -64,7 +64,7 @@ nav {
 .logo {
     flex: 1;
     margin-left: 50px;
-    color: #0a00c4;
+    color: white;
     font-size: 20px;
     font-family: monospace
 }
@@ -133,16 +133,17 @@ nav {
         position: fixed;
         width: 200px;
         height: 100%;
-        background: #e0ded7;
+        background: #42A5F5;
         padding: 30px 0;
-        margin-top:3rem;
+        margin-top: 3rem;
     }
 
         .wrapper .sidebar h2 {
-            color: #0a00c4;
+            color: #ffffff;
             text-transform: uppercase;
             text-align: center;
             margin-bottom: 30px;
+            border-bottom: 1px white solid;
         }
 
         .wrapper .sidebar ul li {
@@ -161,7 +162,7 @@ nav {
                 }
 
             .wrapper .sidebar ul li:hover {
-                background: red;
+                background: #055a9f;
             }
 
             .wrapper .sidebar ul li a:hover {
@@ -210,15 +211,19 @@ nav {
         border: none;
         background: #42A5F5;
         display: inline-block;
-        margin: 7px;
+        margin: 6px;
         text-decoration: none;
         font-size: 21px;
         color: white;
+        text-align: left;
         width: 180px;
+        margin-left: 12px;
+        padding: 1px 4px;
+        border-radius: 6%;
     }
 
         .tab button:hover {
-            background-color: #fe6969;
+            background-color: #055a9f;
         }
 
         .tab button.active {

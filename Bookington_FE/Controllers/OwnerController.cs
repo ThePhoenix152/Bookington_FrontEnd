@@ -126,6 +126,17 @@ namespace Bookington_FE.Controllers
             //
             return View();
         }
+        public IActionResult Competition()
+        {
+            //check session account
+            AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+            if (sessAcount == null || sessAcount.result.role == "admin")
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            //
+            return View();
+        }
         public IActionResult Logout()
         {
             //check session account
