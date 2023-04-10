@@ -65,6 +65,16 @@ namespace Bookington_FE.Controllers
                 //if login sucess, add new session for user
                 if(!res.isError)
                 {
+                    //doc api de lay profile
+                    string linkprofile = ConfigAppSetting.Api_Link + "accounts/profile";
+                    string resjson = GlobalFunc.CallAPI(linkprofile, null, MethodHttp.GET, res.result.sysToken);
+                    AccountProfileResponse profile = JsonConvert.DeserializeObject<AccountProfileResponse>(resjson);
+                    if(profile != null)
+                    {
+                        res.profileRead = profile.result;
+                    }
+                    //
+                    //
                     new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, res);
                 }
                 //

@@ -58,12 +58,20 @@
                     {
                         <tr>
                             <th>@item.Id</th>
-                            <th>@item.RoleName</th>
+                            <th>@item.RoleName
+                                    <select name="role" id="role">
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                        <option value="owner">Owner</option>
+                                    </select>
+                            </th>
                             <th>@item.Phone</th>
-                            <th>@item.DateOfBirth</th>
+                                <th>
+                                    @item.DateOfBirth.ToString("dd-MM-yyyy")
+                                    </th>
                             <th>@item.FullName</th>
 
-                            <th>@item.CreateAt</th>
+                                <th>@item.CreateAt.ToString("dd-MM-yyyy")</th>
                             @if (item.IsActive)
                             {
                                 <th>Active</th>
@@ -73,9 +81,7 @@
                                 <th>InActive</th>
                             }
                             <th>
-                                <button class="btn btn-primary" onclick="UpdateUser('@item.Id','@item.FullName','@item.DateOfBirth')">Edit</button>
-                                <button class="btn btn-danger" onclick="DeleteUser('@item.Id','@item.FullName')">Delete</button>
-                                @*<button type="button" class="btn btn-info btn-lg" onclick="DeleteUser('@item.id','@item.fullName')">Open Modal</button>*@
+                                <button class="btn btn-danger" onclick="DeleteUser('@item.Id.Trim().Replace("\r","").Replace("\n","")','@item.FullName')">Delete</button>
                             </th>
                         </tr>
                     }                    
@@ -175,42 +181,6 @@
     </div>
 </div>
 
-@*Update User*@
-<div class="modal fade" id="upusermodal" style="margin-top:100px">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Update User</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body" id="nameUserUpdate">
-                <div>
-                    <label class="small mb-1" for="inputUpCourtOwnerID">Owner ID</label>
-                    <input class="form-control" id="inputUpCourtOwnerID" type="text" placeholder="Enter Owner ID" value="">
-                </div>
-            </div><div class="modal-body" id="nameUserUpdate">
-                <div>
-                    <label class="small mb-1" for="inputUpUserName">Full name</label>
-                    <input class="form-control" id="inputUpUserName" type="text" placeholder="Enter user's name" value="">
-                </div>
-            </div>
-            <div class="modal-body" id="dobUserUpdate">
-
-                <div>
-                    <label class="small mb-1" for="inputUpUserDOB">Date Of Birth</label>
-                    <input class="form-control" id="inputUpUserDOB" type="text" placeholder="Enter user's date of birth" value="">
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkUpdate" onclick="Update()">OK</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="Cancel">Cancel</button>
-            </div>
-        </div>
-
-    </div>
-</div>
 
 
 @if (Model.pagination.totalCount > 0)

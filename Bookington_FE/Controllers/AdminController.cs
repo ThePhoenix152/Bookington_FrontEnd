@@ -140,7 +140,7 @@ namespace Bookington_FE.Controllers
 
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "owner")
+            if (sessAcount == null || sessAcount.result.role != "admin")
             {
                 return RedirectToAction("Login", "Home");
             }
@@ -178,44 +178,7 @@ namespace Bookington_FE.Controllers
                 //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
             }
         }
-        public bool DeleteUserReport(string id)
-        {
-            string resJsonStr;
-            try
-            {
-                //check session account
-                AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-                //
-                string link = ConfigAppSetting.Api_Link + "bookington/reports/userreports" + id;
-                resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.DELETE, sessAcount.result.sysToken);
-                //
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-                //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
-            }
-        }
-        public bool DeleteCourtReport(string id)
-        {
-            string resJsonStr;
-            try
-            {
-                //check session account
-                AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-                //
-                string link = ConfigAppSetting.Api_Link + "bookington/reports/userreports" + id;
-                resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.DELETE, sessAcount.result.sysToken);
-                //
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-                //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
-            }
-        }
+        
         public bool UpdateAccount(string id, string name, string dob)
         {
             string resJsonStr;
@@ -228,21 +191,44 @@ namespace Bookington_FE.Controllers
                 UpdateAccountRequest request = new UpdateAccountRequest() { fullName = name, dateOfBirth = dob };
 				StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
                 resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
+				new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, "");
 
-				//string link = ConfigAppSetting.Api_Link + "accounts/" + id;
-                //resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.POST, sessAcount.result.sysToken);
-                //
-                
-            }
+			}
             catch (Exception ex)
             {
                 throw ex;
-                //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
             }
             return true;
         }
 
-        
-        
-    }
+		public bool UpdateProfile(string name, string dob)
+		{
+			string resJsonStr;
+			try
+			{
+				//check session account
+				AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+                string id = sessAcount.result.userId;
+				// 
+				string link = ConfigAppSetting.Api_Link + "accounts/" + id;
+				UpdateAccountRequest request = new UpdateAccountRequest() { fullName = name, dateOfBirth = dob };
+				StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+				resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
+                //
+                //if success
+                sessAcount.profileRead.DateOfBirth = DateTime.ParseExact(dob, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                sessAcount.profileRead.FullName = name;
+                sessAcount.result.fullName = name;
+				//
+				new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, sessAcount);
+
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			return true;
+		}
+
+	}
 }

@@ -24,9 +24,29 @@ namespace Bookington_FE.Controllers
             if (sessAcount == null || sessAcount.result.role == "admin")
             {
                 return RedirectToAction("Login", "Home");
-            }
+            }           
             //
             return View(sessAcount);
+        }
+        public void GetNotify()
+        {
+            //check session account
+            AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+            if (sessAcount == null || sessAcount.result.role == "admin")
+            {
+                return;// RedirectToAction("Login", "Home");
+            }
+            //call query notify
+            try
+            {
+                string link = ConfigAppSetting.Api_Link + "notifications?UserId=" + sessAcount.result.userId + "&PageNumber=1&MaxPageSize=1000";
+
+                string resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+            }
+            catch (Exception)
+            {
+
+            }
         }
         public IActionResult Dashboard()
         {
@@ -136,6 +156,34 @@ namespace Bookington_FE.Controllers
             }
             //
             return View();
+        }
+        public IActionResult SubCourt(string courtID)
+        {
+            
+            //check session account
+            AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+            if (sessAcount == null || sessAcount.result.role == "admin")
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            //getCourt by query
+            SubcourtResponse res = null;
+            string resJsonStr = string.Empty;
+            try
+            {
+                string link = ConfigAppSetting.Api_Link + "subcourts/" + courtID;
+                
+                //
+                resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+                //
+                res = JsonConvert.DeserializeObject<SubcourtResponse>(resJsonStr);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            //
+            return View(res);
         }
         public IActionResult Logout()
         {

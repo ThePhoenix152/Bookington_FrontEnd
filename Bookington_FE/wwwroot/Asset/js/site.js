@@ -71,51 +71,7 @@ function ConfirmDel() {
         }
     })
 }
-//function DeleteUserReport(rid) {
-//    debugger
-//   _idUser_del = rid;
-//    $('#delusermodal').modal("show");
-//}
-//function ConfirmDelUR() {
 
-//    jQuery.ajax({
-//        url: "https://localhost:7216/Admin/DeleteUserReport?id=" + _idUser_del,
-//        type: "GET",
-//        cache: false,
-//        success: function Redirect(dataOut) {
-//            if (dataOut == true) {
-//                RedirectToLink("https://localhost:7216/Admin/ManageUserReport");
-//                /*alert("delete user success!");*/
-//            }
-//            else {
-//                alert("delete user report failed!");
-//            }
-//        }
-//    })
-//}
-//function DeleteCourtReport(rid) {
-//    debugger
-//   _idUser_del = rid;
-//    $('#delusermodal').modal("show");
-//}
-//function ConfirmDelCR() {
-
-//    jQuery.ajax({
-//        url: "https://localhost:7216/Admin/DeleteCourtReport?id=" + _idUser_del,
-//        type: "GET",
-//        cache: false,
-//        success: function Redirect(dataOut) {
-//            if (dataOut == true) {
-//                RedirectToLink("https://localhost:7216/Admin/ManagerCourtReport");
-//                /*alert("delete user success!");*/
-//            }
-//            else {
-//                alert("delete user report failed!");
-//            }
-//        }
-//    })
-
-//}
 
 function UpdateUser(uid, uname, udob) {
     debugger
@@ -135,8 +91,8 @@ function Update() {
         data: { id: _idUser_up, name: nameUser_up, dob: dobUser_up },
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                RedirectToLink("https://localhost:7216/Admin/UserManager");
-
+                /*RedirectToLink("https://localhost:7216/Admin/UserManager");*/
+                alert("Update profile successfully");
                 /*alert("delete user success!");*/
             }
             else {
@@ -145,31 +101,27 @@ function Update() {
         }
     })
 }
-function AddUser() {
-    debugger
-   ('#addusermodal').modal("show");
-}
-function ConfirmAdd() {
-    var _nameUser_add = $('#inputAddUserName').val();
-    var _passUser_add = $('inputAddUserPhone').val();
-    var _phoneUser_add = $('inputAddUserPass').val();
-    //
+function UpdateProfile() {
+    var nameUser_up = $('#inputUpUserName').val();
+    var dobUser_up = $('#inputUpUserDOB').val();
     jQuery.ajax({
-        url: "https://localhost:7216/Admin/AddAccount",
+        url: "https://localhost:7216/Admin/UpdateProfile",
         type: "POST",
         cache: false,
-        data: { name: _nameUser_add, pass: _passUser_add, phone: _phoneUser_add, create: Date.now },
+        data: {name: nameUser_up, dob: dobUser_up },
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                RedirectToLink("https://localhost:7216/Admin/UserManager");
+                /*RedirectToLink("https://localhost:7216/Admin/UserManager");*/
+                alert("Update profile successfully");
                 /*alert("delete user success!");*/
             }
             else {
-                alert("Add user failed!");
+                alert("Update user failed!");
             }
         }
     })
 }
+
 function DeleteCourt(uid, uname) {
     debugger
     _idCourt_del = uid;
@@ -273,7 +225,9 @@ function SearchCourt() {
 
 function DetailCourt(id) {
     _idCourt_detail = id;
-    $('#subcourtmodal').modal("show");
+    window.location.href = 'https://localhost:7216/Owner/SubCourt?courtID=' + _idCourt_detail;
+    /*$('#subcourtmodal').modal("show");*/
+
 }
 
 function SetPageSizeU(size) {
@@ -314,3 +268,4 @@ function DetailCompe(id) {
     _idCourt_detail = id;
     $('#detailcompe').modal("show");
 }
+

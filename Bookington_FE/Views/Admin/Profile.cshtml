@@ -1,6 +1,6 @@
 ﻿
 @{
-	ViewData["Title"] = "Profilr";
+	ViewData["Title"] = "Profile";
 	Layout = "_LayoutAdminPage";
 }
 @using Bookington_FE.Models.ResponseModel;
@@ -37,15 +37,15 @@
 									  
 									  <div class="mb-3">
 										  <label class="small mb-1" for="inputFullName">Full name</label>
-										  <input class="form-control" id="inputFullName" type="text" placeholder="Enter your first name" value="@Model.result.fullName">
+										  <input class="form-control" id="inputUpUserName" type="text" placeholder="Enter user's name" value="@Model.result.fullName">
 									  </div>
 									  <div class="mb-3">
-										  <label class="small mb-1" for="inputFullName">Phone</label>
-										  <input class="form-control" id="inputFullName" type="text" placeholder="Enter your first name" value="@Model.result.phonenumber">
+										  <label class="small mb-1" for="inputFullName">Date Of Birth</label>
+								<input class="form-control" id="inputUpUserDOB" type="text" placeholder="Enter user's date of birth" value="@Model.profileRead.DateOfBirth.ToString("dd-MM-yyyy")">
 									  </div>
 									  
 									  <!-- Save changes button-->
-									  <button class="btn btn-primary" type="button">Save changes</button>
+							<button class="btn btn-primary" type="button" id="OkUpdate" onclick="UpdateProfile()">Save changes</button>
 								  </form>
 							  </div>
 						  </div>

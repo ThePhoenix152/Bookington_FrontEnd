@@ -43,7 +43,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Address</th>
+                    @*<th>Address</th>*@
                     <th>Open at</th>
                     <th>Close at</th>
                     <th>Action</th>
@@ -58,13 +58,19 @@
                             <tr>
                                 <th>@item.Id</th>
                                 <th>@item.Name</th>
-                                <th>@item.Address</th>
+                                @*<th>@item.Address</th>*@
                                 <th>@item.OpenAt</th>
                                 <th>@item.CloseAt</th>
                                 <th>
                                     <button class="btn btn-primary" onclick="UpdateCourt('@item.Id','@item.OwnerId','@item.DistrictName','@item.Name','@item.Address','@item.OpenAt','@item.CloseAt')">Edit</button>
                                     <button class="btn btn-danger" onclick="DeleteCourt('@item.Id','@item.Name')">Delete</button>
-                                    <button class="btn btn-success" onclick="DetailCourt('@item.Id')">Details</button>
+@*                                    <button class="btn btn-success" onclick="DetailCourt('@item.Id')">Details</button>
+*@                                    @using (Html.BeginForm("SubCourt", "Owner", new {courtID = item.Id}, FormMethod.Post))
+                                    {
+                                        <button class="btn btn-success" type="submit">
+                                            Detail
+                                        </button>
+                                    }
 
                                 </th>
 
