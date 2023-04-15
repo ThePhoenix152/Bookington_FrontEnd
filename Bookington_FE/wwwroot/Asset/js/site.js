@@ -3,6 +3,7 @@ var _idCourt_del = "";
 var _idUser_up = "";
 var _idCourt_up = "";
 var _idCourt_detail = "";
+var _idSubCourt_del = "";
 //for search count
 var _currentPage = parseInt(0);
 var _pageSize = parseInt(10);
@@ -269,3 +270,32 @@ function DetailCompe(id) {
     $('#detailcompe').modal("show");
 }
 
+function DetailSubCourt(id) {
+    _idSubCourt_detail = id;
+    $('#detailsub').modal("show");
+}
+
+function DeleteSubCourt(sid, uname) {
+    debugger
+    _idSubCourt_del = sid;
+    $('#nameSubCourtDel span').text(uname);
+    $('#delsubcourtmodal').modal("show");
+}
+function ConfirmSCDel() {
+
+    //
+    jQuery.ajax({
+        url: "https://localhost:7216/Owner/DeleteSubCourt?id=" + _idSubCourt_del,
+        type: "GET",
+        cache: false,
+        success: function Redirect(dataOut) {
+            if (dataOut == true) {
+                RedirectToLink("https://localhost:7216/Owner/Subcourt");
+                /*alert("delete user success!");*/
+            }
+            else {
+                alert("delete court failed!");
+            }
+        }
+    })
+}

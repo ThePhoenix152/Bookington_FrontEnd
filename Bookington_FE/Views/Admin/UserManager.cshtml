@@ -13,30 +13,6 @@
             <input type="search" id="searchUserTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
             <button type="button" class=" btn btn-dark" onclick="btnSearchUserClick()">search</button>
         </div>
-        <div class="row">
-            <div class="col-9">Total user: @Model.pagination.totalCount </div>
-            <div class="col-2">Page Size:</div>
-            @*<div class="col-1" style="margin-left:-100px">
-            <input type="number" id="selectPagesize" value="@Model.pagination.maxPageSize" style="max-width: 40px; text-align:center" />
-            </div>*@
-            <div class="col-1" style="margin-left:-100px">
-                <label class="dropdownc">
-
-                    <div class="dd-button" id="pageSizeLabU">
-                        <span>@Model.pagination.maxPageSize</span>
-                    </div>
-
-                    <input type="checkbox" class="dd-input" id="test">
-
-                    <ul class="dd-menu">
-                        <li onclick="SetPageSizeU(5)">5</li>
-                        <li onclick="SetPageSizeU(10)">10</li>
-                        <li onclick="SetPageSizeU(15)">15</li>
-                    </ul>
-
-                </label>
-            </div>
-        </div>
         <table id="example" class="table table-striped" style="width:100%">
             <thead>
                 <tr>

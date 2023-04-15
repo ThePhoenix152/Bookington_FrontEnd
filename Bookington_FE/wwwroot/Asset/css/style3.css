@@ -48,7 +48,7 @@
 	width: var(--sidebar-width);
 	transition: all .3s ease-in-out;
 	transform: translateX(0);
-	z-index: 9999999
+	z-index: 1
 }
 
 .sidebar .close-aside {

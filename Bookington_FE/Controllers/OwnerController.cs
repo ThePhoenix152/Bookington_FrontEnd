@@ -85,31 +85,8 @@ namespace Bookington_FE.Controllers
             string resJsonStr = string.Empty;
             try
             {
-                string link = ConfigAppSetting.Api_Link + "courts/query";
-                string param = "";
-                if (!string.IsNullOrEmpty(searchText))
-                {
-                    param = "SearchText=" + searchText;
-                }
-                //
-                if(currentPage > 0)
-                {
-                    if (!string.IsNullOrEmpty(param))
-                        param += "&PageNumber=" + currentPage;
-                    else
-                        param += "PageNumber=" + currentPage;
-                }
-                //
-                if(pageSize > 0)
-                {
-                    if (!string.IsNullOrEmpty(param))
-                        param += "&MaxPageSize=" + pageSize;
-                    else
-                        param += "MaxPageSize=" + pageSize;
-                }
-                //
-                if (!string.IsNullOrEmpty(param))
-                    link += "?" + param;
+                string link = ConfigAppSetting.Api_Link + "courts";
+                
                 resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
                 //
                 res = JsonConvert.DeserializeObject<CourtResponse>(resJsonStr);
@@ -241,6 +218,25 @@ namespace Bookington_FE.Controllers
         public IActionResult Search()
         {
             return View();
+        }
+        public bool DeleteSubCourt(string id)
+        {
+            string resJsonStr;
+            try
+            {
+                //check session account
+                AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+                //
+                string link = ConfigAppSetting.Api_Link + "subcourts/" + id;
+                resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.DELETE, sessAcount.result.sysToken);
+                //
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
+            }
         }
 
     }

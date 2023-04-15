@@ -6,19 +6,83 @@
 @model SubcourtResponse
 
 <link rel="stylesheet" href=@Url.Content("~/Asset/css/OwnerDropdown.css")>
+<link rel="stylesheet" href=@Url.Content("~/Asset/css/schedule.css")>
+<style>
+    .tab1s {
+        width: 100%;
+        display: inline-block;
+    }
 
+    /*----- Tab Links -----*/
+    .tab-link1s:after {
+        display: block;
+        clear: both;
+        content: '';
+    }
+
+
+    .tab-link1s li {
+        margin: 0;
+        float: left;
+        list-style: none;
+    }
+
+    .tab-link1s a {
+        padding: 9px 30px 5px 30px;
+        display: inline-block;
+        border-radius: 2px 2px 0px 0px;
+        background: #2E5C8A;
+        font-size: 16px;
+        font-weight: 600;
+        color: #FFAD5C;
+        transition: all linear 0.3s;
+        width: 150px;
+        text-align: center;
+        text-decoration: none;
+    }
+
+        .tab-link1s a:hover {
+            background: #FF3333;
+            color: #EBEBEB;
+            text-decoration: none;
+        }
+
+    li.active a, li.active a:hover {
+        background: #FFF;
+        color: #4C4C4C;
+    }
+
+    /*----- Content of Tabs -----*/
+    .tab-content {
+        width: 960px;
+        border-radius: 3px;
+        box-shadow: 0px 10px 10px rgba(0,0,0,0.45);
+        background: #fff;
+        margin-top: -16px;
+        padding: 15px;
+    }
+
+    .tab1 {
+        display: none;
+    }
+
+        .tab1.active {
+            display: block;
+        }
+
+</style>
 
 <section>
     <div id="ManageYard" class="tabcontent" style="display:block">
-        <h3>Manage Sub Court</h3>
+        <h3>Court Detail</h3>
         <p>Open Time: 8:00</p>
         <p>Close Time: 22:00</p>
         <p>Address: Số 152, đường quốc lộ 13.</p>
-        <div class="input-group" style="width:30%">
+        @*<div class="input-group" style="width:30%">
             <input type="search" id="searchCourtTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
             <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
-        </div>
-       
+        </div>*@
+        <h3>Subcourt of court</h3>
         <table id="example" class="table table-striped" style="width:100%">
             <thead>
                 <tr>
@@ -26,7 +90,8 @@
                     <th>Name</th>
                     <th>Type ID</th>
                     <th>Create at</th>
-                    
+                    <th>Court ID</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +105,11 @@
                                 <th>@item.Name</th>
                                 <th>@item.CourtTypeId</th>
                                 <th>@item.CreateAt.ToString("dd-MM-yyyy")</th>
+                                <th>@item.ParentCourtId</th>
+                                <th>
+                                    <button class="btn btn-primary" onclick="DetailSubCourt('@item.Id')">Details</button>
+                                    <button class="btn btn-danger" onclick="DeleteSubCourt('@item.Id','@item.Name')">Delete</button>
+                                </th>
                                 
 
                             </tr>
@@ -48,77 +118,330 @@
             </tbody>
 
         </table>
-        @*<nav aria-label="Page navigation example" style="background :#ffffff; margin:0; position:relative">
-            <ul class="pagination">
-                @if (Model.pagination.hasPrevious)
-                {
-                    <li class="page-item">
-                        <button class="page-link" aria-label="Previous" onclick="btnPreviousClick()">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </button>
-                    </li>
-                }
-                @if (Model.pagination.totalCount > 0)
-                {
-                    int totalPage = Model.pagination.totalPages;
-                    int curPage = Model.pagination.currentPage;
-                    int pageshow = 0;
-                    int preMaxPage = 0;
-                    int nextMaxPage = 0;
-                    //
-                    if (!Model.pagination.hasPrevious)
-                    {
-                        preMaxPage = 1;
-                        if (totalPage - 3 > 0)
-                            nextMaxPage = 3;
-                        else
-                            nextMaxPage = totalPage;
-                    }
-                    else
-                    {
-                        if (Model.pagination.hasNext)
-                        {
-                            preMaxPage = curPage - 1;
-                            nextMaxPage = curPage + 1;
-                        }
-                        else
-                        {
-                            nextMaxPage = totalPage;
-                            preMaxPage = totalPage - 2;
-                        }
-                    }
-                    for (int i = preMaxPage; i <= nextMaxPage; i++)
-                    {
-                        if (i == curPage)
-                        {
-                            <li class="page-item"><button class="page-link" style="color:red" onclick="btnNumbpageClick(@i)">@i</button></li>
-                        }
-                        else
-                        {
-                            <li class="page-item"><button class="page-link" onclick="btnNumbpageClick(@i)">@i</button></li>
-                        }
-                        pageshow++;
-                    }
 
-                }
 
-                @if (Model.pagination.hasNext)
-                {
-                    <li class="page-item">
-                        <button class="page-link" aria-label="Next" onclick="btnNextClick()">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </button>
-                    </li>
-                }
-            </ul>
-        </nav>*@
+        @*Detail Subcourt*@
+        <div class="modal fade" id="detailsub" style="margin-top:100px">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Detail</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    
+                        <div class="tab1s">
+                            <ul class="tab-link1s">
+                                <li class="active"><a href="#schedule">Schedule</a></li>
+                                <li><a href="#booking">Booking</a></li>
+                            </ul>
+                            <div class="tab-content" style="width:100%">
+                                <div id="schedule" class="tab1 active">
+                                <p>
+                                    
+
+
+                                        <div class="row">
+                                            <div class="schedule-table">
+                                                <table class="table bg-white">
+                                                    <thead>
+                                                        <tr>
+                                                            <th> </th>
+                                                            <th>Monday</th>
+                                                            <th>Tuesday</th>
+                                                            <th>Wednesday</th>
+                                                            <th>Thursday</th>
+                                                            <th>Friday</th>
+                                                            <th>Saturday</th>
+                                                            <th>Sunday</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="day"> 6:00 - 7:00 </td>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price:100$ <br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="day"> 7:00 - 7:30 </td>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price:100$ <br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="day"> 7:30 - 8:00 </td>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price:100$ <br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                            <th>
+                                                                Price: 200$<br>
+                                                                Active
+                                                            </th>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                </p>
+                                
+                                    </div>
+                                    <div id="booking" class="tab1">
+                                <p>
+                                
+
+                                   
+                                    <div class="row">
+                                        <div class="schedule-table">
+                                            <table class="table bg-white">
+                                                <thead>
+                                                    <tr>
+                                                        <th> </th>
+                                                        <th>Monday</th>
+                                                        <th>Tuesday</th>
+                                                        <th>Wednesday</th>
+                                                        <th>Thursday</th>
+                                                        <th>Friday</th>
+                                                        <th>Saturday</th>
+                                                        <th>Sunday</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="day"> 6:00 - 7:00 </td>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price:100$ <br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="day"> 7:00 - 7:30 </td>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price:100$ <br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="day"> 7:30 - 8:00 </td>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price:100$ <br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                </p>
+                                    </div>
+                            </div>
+
+                        </div>
+                    
+
+                    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmDel()">OK</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="CancelRemove">Cancel</button>
+                    </div>
+                </div>
+
+        @*Delete Subcourt*@
+        <div class="modal fade" id="delsubcourtmodal" style="margin-top:100px">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Warning!</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        `
+                    </div>
+
+                    <div class="modal-body" id="nameSubCourtDel">
+                        Are you sure to delete subcourt <span></span>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmCDel()">OK</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="CancelRemove">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
         @using (Html.BeginForm("ManageYard", "Owner", FormMethod.Post))
         {
             <button class="btn btn-success" type="submit">
                 Back to Court List
             </button>
         }
-    </div>
+            </div>
+        
+        
+    
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.tab1s .tab-link1s a').on('click', function (e) {
+                var currentAttrValue = $(this).attr('href');
+
+                // Show/Hide Tabs
+                $('.tab1s ' + currentAttrValue).fadeIn(400).siblings().hide();
+                // Change/remove current tab to active
+                $(this).parent('li').addClass('active').siblings().removeClass('active');
+
+                e.preventDefault();
+
+
+            });
+        });
+    </script>
 </section>
