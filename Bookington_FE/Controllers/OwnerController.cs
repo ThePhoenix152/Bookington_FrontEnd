@@ -239,5 +239,34 @@ namespace Bookington_FE.Controllers
             }
         }
 
-    }
+		public bool UpdateProfile(string name, string dob)
+		{
+			string resJsonStr;
+			try
+			{
+				//check session account
+				AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+				string id = sessAcount.result.userId;
+				// 
+				string link = ConfigAppSetting.Api_Link + "accounts/" + id;
+				UpdateAccountRequest request = new UpdateAccountRequest() { fullName = name, dateOfBirth = dob };
+				StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+				resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
+				//
+				//if success
+				sessAcount.profileRead.DateOfBirth = DateTime.ParseExact(dob, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+				sessAcount.profileRead.FullName = name;
+				sessAcount.result.fullName = name;
+				//
+				new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, sessAcount);
+
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			return true;
+		}
+
+	}
 }
