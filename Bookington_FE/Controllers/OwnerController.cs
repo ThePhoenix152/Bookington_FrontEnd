@@ -86,8 +86,31 @@ namespace Bookington_FE.Controllers
             try
             {
                 string link = ConfigAppSetting.Api_Link + "courts";
-                
-                resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+				string param = "";
+				if (!string.IsNullOrEmpty(searchText))
+				{
+					param = "SearchText=" + searchText;
+				}
+				//
+				if (currentPage > 0)
+				{
+					if (!string.IsNullOrEmpty(param))
+						param += "&PageNumber=" + currentPage;
+					else
+						param += "PageNumber=" + currentPage;
+				}
+				//
+				if (pageSize > 0)
+				{
+					if (!string.IsNullOrEmpty(param))
+						param += "&MaxPageSize=" + pageSize;
+					else
+						param += "MaxPageSize=" + pageSize;
+				}
+				//
+				if (!string.IsNullOrEmpty(param))
+					link += "?" + param;
+				resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
                 //
                 res = JsonConvert.DeserializeObject<CourtResponse>(resJsonStr);
             }
