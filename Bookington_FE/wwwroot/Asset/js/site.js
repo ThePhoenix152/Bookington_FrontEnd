@@ -272,7 +272,7 @@ function DetailCompe(id) {
 
 function DetailSubCourt(id) {
     _idSubCourt_detail = id;
-    $('#detailsub').modal("show");
+    $('#' + id).modal("show");
 }
 
 function DeleteSubCourt(sid, uname) {

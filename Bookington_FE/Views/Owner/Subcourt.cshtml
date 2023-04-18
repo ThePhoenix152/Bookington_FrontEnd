@@ -3,7 +3,7 @@
     Layout = "_LayoutOwner";
 }
 @using Bookington_FE.Models.ResponseModel;
-@model SubcourtResponse
+@model SubCourtAllModel
 
 <link rel="stylesheet" href=@Url.Content("~/Asset/css/OwnerDropdown.css")>
 <link rel="stylesheet" href=@Url.Content("~/Asset/css/schedule.css")>
@@ -79,8 +79,8 @@
         <p>Close Time: 22:00</p>
         <p>Address: Số 152, đường quốc lộ 13.</p>
         @*<div class="input-group" style="width:30%">
-            <input type="search" id="searchCourtTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-            <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
+        <input type="search" id="searchCourtTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
         </div>*@
         <h3>Subcourt of court</h3>
         <table id="example" class="table table-striped" style="width:100%">
@@ -95,29 +95,388 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.result != null && Model.result.Count > 0)
-                    @foreach (var item in Model.result)
+                @if (Model.SubCourtDetails != null && Model.SubCourtDetails.Count > 0)
+                    @foreach (var item in Model.SubCourtDetails)
                     {
-                        @if (!item.IsDeleted)
+                        @if (!item.subcourtModel.IsDeleted)
                         {
                             <tr>
-                                <th>@item.Id</th>
-                                <th>@item.Name</th>
-                                <th>@item.CourtTypeId</th>
-                                <th>@item.CreateAt.ToString("dd-MM-yyyy")</th>
-                                <th>@item.ParentCourtId</th>
+                                <th>@item.subcourtModel.Id</th>
+                                <th>@item.subcourtModel.Name</th>
+                                <th>@item.subcourtModel.CourtTypeId</th>
+                                <th>@item.subcourtModel.CreateAt.ToString("dd-MM-yyyy")</th>
+                                <th>@item.subcourtModel.ParentCourtId</th>
                                 <th>
-                                    <button class="btn btn-primary" onclick="DetailSubCourt('@item.Id')">Details</button>
-                                    <button class="btn btn-danger" onclick="DeleteSubCourt('@item.Id','@item.Name')">Delete</button>
+                                    <button class="btn btn-primary" onclick="DetailSubCourt('@item.subcourtModel.Id')">Details</button>
+                                    <button class="btn btn-danger" onclick="DeleteSubCourt('@item.subcourtModel.Id','@item.subcourtModel.Name')">Delete</button>
                                 </th>
-                                
-
                             </tr>
                         }
                     }
             </tbody>
 
         </table>
+        @{
+            if (Model.SubCourtDetails != null && Model.SubCourtDetails.Count > 0)
+            {
+                foreach (var item in Model.SubCourtDetails)
+                {
+                    if (!item.subcourtModel.IsDeleted)
+                    {
+                        @*Detail Subcourt*@
+                        <div class="modal fade" id="@item.subcourtModel.Id" style="margin-top:100px">
+                            <div class="modal-dialog modal-fullscreen">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Detail</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="tab1s">
+                                        <ul class="tab-link1s">
+                                            <li class="active"><a href="#schedule">Schedule</a></li>
+                                            <li><a href="#booking">Booking</a></li>
+                                        </ul>
+                                        <div class="tab-content" style="width:100%">
+                                            <div id="schedule" class="tab1 active">
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="schedule-table">
+                                                            <table class="table bg-white">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th> </th>
+                                                                        <th>Monday</th>
+                                                                        <th>Tuesday</th>
+                                                                        <th>Wednesday</th>
+                                                                        <th>Thursday</th>
+                                                                        <th>Friday</th>
+                                                                        <th>Saturday</th>
+                                                                        <th>Sunday</th>
+
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach (var sl in item.GroupSlotByTime)
+                                                                    {
+                                                                        <tr>
+                                                                            <td class="day">@sl.Key</td>
+                                                                            @{
+                                                                                var sss = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "monday").FirstOrDefault();
+                                                                                if (sss != null)
+                                                                                {
+                                                                                    <th>
+                                                                                    Price: @sss.price.ToString()
+                                                                                    @if(@sss.IsActive = true)
+                                                                                        {
+                                                                                            <p>Active</p>
+                                                                                            ;
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <p>InActive</p>
+                                                                                            ;
+                                                                                        }
+                                                                                    </th>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <th>
+                                                                                    </th>
+                                                                                }
+                                                                            }
+
+                                                                            @{
+                                                                                var ss3 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "tuesday").FirstOrDefault();
+                                                                                if (ss3 != null)
+                                                                                {
+                                                                                    <th>
+                                                                                        Price: @ss3.price.ToString()
+                                                                                        @if (@ss3.IsActive = true)
+                                                                                        {
+                                                                                            <p>Active</p>
+                                                                                            ;
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <p>InActive</p>
+                                                                                            ;
+                                                                                        }
+                                                                                    </th>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <th>
+                                                                                    </th>
+                                                                                }
+                                                                            }
+
+                                                                            @{
+                                                                                var ss4 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "wednesday").FirstOrDefault();
+                                                                                if (ss4 != null)
+                                                                                {
+                                                                                    <th>
+                                                                                        Price: @ss4.price.ToString()
+                                                                                        @if (@ss4.IsActive = true)
+                                                                                        {
+                                                                                            <p>Active</p>
+                                                                                            ;
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <p>InActive</p>
+                                                                                            ;
+                                                                                        }
+                                                                                    </th>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <th>
+                                                                                    </th>
+                                                                                }
+                                                                            }
+
+                                                                            @{
+                                                                                var ss5 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "thursday").FirstOrDefault();
+                                                                                if (ss5 != null)
+                                                                                {
+                                                                                    <th>
+                                                                                        Price: @ss5.price.ToString()
+                                                                                        @if (@ss5.IsActive = true)
+                                                                                        {
+                                                                                            <p>Active</p>
+                                                                                            ;
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <p>InActive</p>
+                                                                                            ;
+                                                                                        }
+                                                                                    </th>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <th>
+                                                                                    </th>
+                                                                                }
+                                                                            }
+
+                                                                            @{
+                                                                                var ss6 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "friday").FirstOrDefault();
+                                                                                if (ss6 != null)
+                                                                                {
+                                                                                    <th>
+                                                                                        Price: @ss6.price.ToString()
+                                                                                        @if (@ss6.IsActive = true)
+                                                                                        {
+                                                                                            <p>Active</p>
+                                                                                            ;
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <p>InActive</p>
+                                                                                            ;
+                                                                                        }
+                                                                                    </th>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <th>
+                                                                                    </th>
+                                                                                }
+                                                                            }
+
+                                                                            @{
+                                                                                var ss7 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "saturday").FirstOrDefault();
+                                                                                if (ss7 != null)
+                                                                                {
+                                                                                    <th>
+                                                                                        Price: @ss7.price.ToString()
+                                                                                        @if(@ss7.IsActive = true)
+                                                                                        {
+                                                                                        <p>Active</p>
+                                                                                        ;
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                        <p>InActive</p>
+                                                                                        ;
+                                                                                        }
+                                                                                    </th>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <th>
+                                                                                    </th>
+                                                                                }
+                                                                            }
+                                                                            @{
+                                                                                var ss8 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "sunday").FirstOrDefault();
+                                                                                if (ss8 != null)
+                                                                                {
+                                                                                    <th>
+                                                                                        Price: @ss8.price.ToString()
+                                                                                        @if (@ss8.IsActive = true)
+                                                                                        {
+                                                                                            <p>Active</p>
+                                                                                            ;
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <p>InActive</p>
+                                                                                            ;
+                                                                                        }
+                                                                                    </th>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <th>
+                                                                                    </th>
+                                                                                }
+                                                                            }
+                                                                        </tr>
+                                                                    }
+                                                                    
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </p>
+
+                                            </div>
+                                            <div id="booking" class="tab1">
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="schedule-table">
+                                                            <table class="table bg-white">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th> </th>
+                                                                        <th>Monday</th>
+                                                                        <th>Tuesday</th>
+                                                                        <th>Wednesday</th>
+                                                                        <th>Thursday</th>
+                                                                        <th>Friday</th>
+                                                                        <th>Saturday</th>
+                                                                        <th>Sunday</th>
+
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="day"> 6:00 - 7:00 </td>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price:100$ <br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="day"> 7:00 - 7:30 </td>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price:100$ <br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="day"> 7:30 - 8:00 </td>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price:100$ <br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                        <th>
+                                                                            Price: 200$<br>
+                                                                            Active
+                                                                        </th>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmDel()">OK</button>
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="CancelRemove">Cancel</button>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        }
 
 
         @*Detail Subcourt*@
@@ -128,141 +487,15 @@
                         <h4 class="modal-title">Detail</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    
-                        <div class="tab1s">
-                            <ul class="tab-link1s">
-                                <li class="active"><a href="#schedule">Schedule</a></li>
-                                <li><a href="#booking">Booking</a></li>
-                            </ul>
-                            <div class="tab-content" style="width:100%">
-                                <div id="schedule" class="tab1 active">
+
+                    <div class="tab1s">
+                        <ul class="tab-link1s">
+                            <li class="active"><a href="#schedule">Schedule</a></li>
+                            <li><a href="#booking">Booking</a></li>
+                        </ul>
+                        <div class="tab-content" style="width:100%">
+                            <div id="schedule" class="tab1 active">
                                 <p>
-                                    
-
-
-                                        <div class="row">
-                                            <div class="schedule-table">
-                                                <table class="table bg-white">
-                                                    <thead>
-                                                        <tr>
-                                                            <th> </th>
-                                                            <th>Monday</th>
-                                                            <th>Tuesday</th>
-                                                            <th>Wednesday</th>
-                                                            <th>Thursday</th>
-                                                            <th>Friday</th>
-                                                            <th>Saturday</th>
-                                                            <th>Sunday</th>
-
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="day"> 6:00 - 7:00 </td>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price:100$ <br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="day"> 7:00 - 7:30 </td>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price:100$ <br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="day"> 7:30 - 8:00 </td>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price:100$ <br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                            <th>
-                                                                Price: 200$<br>
-                                                                Active
-                                                            </th>
-                                                        </tr>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                </p>
-                                
-                                    </div>
-                                    <div id="booking" class="tab1">
-                                <p>
-                                
-
-                                   
                                     <div class="row">
                                         <div class="schedule-table">
                                             <table class="table bg-white">
@@ -378,22 +611,137 @@
                                             </table>
                                         </div>
                                     </div>
-                                </div>
                                 </p>
-                                    </div>
+
                             </div>
+                            <div id="booking" class="tab1">
+                                <p>
+                                    <div class="row">
+                                        <div class="schedule-table">
+                                            <table class="table bg-white">
+                                                <thead>
+                                                    <tr>
+                                                        <th> </th>
+                                                        <th>Monday</th>
+                                                        <th>Tuesday</th>
+                                                        <th>Wednesday</th>
+                                                        <th>Thursday</th>
+                                                        <th>Friday</th>
+                                                        <th>Saturday</th>
+                                                        <th>Sunday</th>
 
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="day"> 6:00 - 7:00 </td>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price:100$ <br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="day"> 7:00 - 7:30 </td>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price:100$ <br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="day"> 7:30 - 8:00 </td>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price:100$ <br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                        <th>
+                                                            Price: 200$<br>
+                                                            Active
+                                                        </th>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </p>
+                            </div>
                         </div>
-                    
-
-                    
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmDel()">OK</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="CancelRemove">Cancel</button>
                     </div>
                 </div>
-
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmDel()">OK</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="CancelRemove">Cancel</button>
+            </div>
+        </div>
         @*Delete Subcourt*@
         <div class="modal fade" id="delsubcourtmodal" style="margin-top:100px">
             <div class="modal-dialog modal-sm">
@@ -423,10 +771,10 @@
                 Back to Court List
             </button>
         }
-            </div>
-        
-        
-    
+    </div>
+
+
+
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script>
         $(document).ready(function () {

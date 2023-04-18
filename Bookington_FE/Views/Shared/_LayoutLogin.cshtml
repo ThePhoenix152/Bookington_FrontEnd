@@ -46,8 +46,8 @@
 			</div>
 			<div class="form-sub-w3ls">
 					<i class="fa-solid fa-key"></i>
-					<input id="passinput" type="password" Name="Password" placeholder="PASSWORD" required="">	
-					<span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+					<input id="passinput" type="password" Name="Password" placeholder="PASSWORD" required="">
+				<i class="far fa-eye" id="togglePassword" style="margin-left: -30px; cursor: pointer;color:darkslategray"></i>
 
 			</div>
 			
@@ -85,15 +85,15 @@
 		});
 	</script>*@
 	<script>
-		$(".toggle-password").click(function() {
+		const togglePassword = document.querySelector('#togglePassword');
+		const password = document.querySelector('#passinput');
 
-		  $(this).toggleClass("fa-eye fa-eye-slash");
-		  var input = $($(this).attr("toggle"));
-		  if (input.attr("type") == "password") {
-			input.attr("type", "text");
-		  } else {
-			input.attr("type", "password");
-		  }
+		togglePassword.addEventListener('click', function (e) {
+			// toggle the type attribute
+			const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+			password.setAttribute('type', type);
+			// toggle the eye slash icon
+			this.classList.toggle('fa-eye-slash');
 		});
 	</script>
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 using NuGet.Configuration;
 using NuGet.Protocol;
+using System.Collections.Generic;
 using System.Net;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
@@ -24,7 +25,7 @@ namespace Bookington_FE.Controllers
             if (sessAcount == null || sessAcount.result.role == "admin")
             {
                 return RedirectToAction("Login", "Home");
-            }           
+            }
             //
             return View(sessAcount);
         }
@@ -86,31 +87,31 @@ namespace Bookington_FE.Controllers
             try
             {
                 string link = ConfigAppSetting.Api_Link + "courts";
-				string param = "";
-				if (!string.IsNullOrEmpty(searchText))
-				{
-					param = "SearchText=" + searchText;
-				}
-				//
-				if (currentPage > 0)
-				{
-					if (!string.IsNullOrEmpty(param))
-						param += "&PageNumber=" + currentPage;
-					else
-						param += "PageNumber=" + currentPage;
-				}
-				//
-				if (pageSize > 0)
-				{
-					if (!string.IsNullOrEmpty(param))
-						param += "&MaxPageSize=" + pageSize;
-					else
-						param += "MaxPageSize=" + pageSize;
-				}
-				//
-				if (!string.IsNullOrEmpty(param))
-					link += "?" + param;
-				resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+                string param = "";
+                if (!string.IsNullOrEmpty(searchText))
+                {
+                    param = "SearchText=" + searchText;
+                }
+                //
+                if (currentPage > 0)
+                {
+                    if (!string.IsNullOrEmpty(param))
+                        param += "&PageNumber=" + currentPage;
+                    else
+                        param += "PageNumber=" + currentPage;
+                }
+                //
+                if (pageSize > 0)
+                {
+                    if (!string.IsNullOrEmpty(param))
+                        param += "&MaxPageSize=" + pageSize;
+                    else
+                        param += "MaxPageSize=" + pageSize;
+                }
+                //
+                if (!string.IsNullOrEmpty(param))
+                    link += "?" + param;
+                resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
                 //
                 res = JsonConvert.DeserializeObject<CourtResponse>(resJsonStr);
             }
@@ -121,7 +122,7 @@ namespace Bookington_FE.Controllers
             //
             return View(res);
         }
-        
+
         public IActionResult Profile()
         {
 
@@ -159,7 +160,7 @@ namespace Bookington_FE.Controllers
         }
         public IActionResult SubCourt(string courtID)
         {
-            
+
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
             if (sessAcount == null || sessAcount.result.role == "admin")
@@ -172,18 +173,56 @@ namespace Bookington_FE.Controllers
             try
             {
                 string link = ConfigAppSetting.Api_Link + "subcourts/" + courtID;
-                
+
                 //
                 resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
                 //
                 res = JsonConvert.DeserializeObject<SubcourtResponse>(resJsonStr);
+                //
+                SubCourtAllModel resAll = new SubCourtAllModel();
+                List<SubCourtDetails> subcourtDetails = new List<SubCourtDetails>();
+                //
+                foreach (SubcourtModel sc in res.result)
+                {
+                    string subcourtId = sc.Id;
+                    //get schedule by query
+                    SlotResponse resslot = null;
+                    string resslotJsonStr = string.Empty;
+                    string linkslot = ConfigAppSetting.Api_Link + "slots/schedule/" + subcourtId;
+
+                    resslotJsonStr = GlobalFunc.CallAPI(linkslot, null, MethodHttp.GET, sessAcount.result.sysToken);
+                    //
+                    resslot = JsonConvert.DeserializeObject<SlotResponse>(resslotJsonStr);
+                    //
+                    Dictionary<string, List<SlotModel>> mappingSlotToTime = new Dictionary<string, List<SlotModel>>();
+                    foreach (SlotModel slotModel in resslot?.result)
+                    {
+                        string key = slotModel.startTime.ToString(@"hh\:mm") + "-" + slotModel.endTime.ToString(@"hh\:mm");
+
+                        if (!mappingSlotToTime.Keys.Contains(key))
+                        {
+                            mappingSlotToTime.Add(key, new List<SlotModel> { slotModel });
+                        }
+                        else
+                        {
+                            mappingSlotToTime[key].Add(slotModel);
+                        }
+                    }
+                    //
+                    SubCourtDetails dt = new SubCourtDetails();
+                    dt.subcourtModel = sc;
+                    dt.GroupSlotByTime = mappingSlotToTime;
+                    subcourtDetails.Add(dt);
+                    //
+                }
+                //
+                resAll.SubCourtDetails = subcourtDetails;
+                return View(resAll);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            //
-            return View(res);
         }
         public IActionResult Logout()
         {
@@ -262,34 +301,72 @@ namespace Bookington_FE.Controllers
             }
         }
 
-		public bool UpdateProfile(string name, string dob)
-		{
-			string resJsonStr;
-			try
-			{
-				//check session account
-				AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-				string id = sessAcount.result.userId;
-				// 
-				string link = ConfigAppSetting.Api_Link + "accounts/" + id;
-				UpdateAccountRequest request = new UpdateAccountRequest() { fullName = name, dateOfBirth = dob };
-				StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-				resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
-				//
-				//if success
-				sessAcount.profileRead.DateOfBirth = DateTime.ParseExact(dob, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
-				sessAcount.profileRead.FullName = name;
-				sessAcount.result.fullName = name;
-				//
-				new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, sessAcount);
+        public bool UpdateProfile(string name, string dob)
+        {
+            string resJsonStr;
+            try
+            {
+                //check session account
+                AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+                string id = sessAcount.result.userId;
+                // 
+                string link = ConfigAppSetting.Api_Link + "accounts/" + id;
+                UpdateAccountRequest request = new UpdateAccountRequest() { fullName = name, dateOfBirth = dob };
+                StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
+                //
+                //if success
+                sessAcount.profileRead.DateOfBirth = DateTime.ParseExact(dob, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                sessAcount.profileRead.FullName = name;
+                sessAcount.result.fullName = name;
+                //
+                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, sessAcount);
 
-			}
-			catch (Exception ex)
-			{
-				throw ex;
-			}
-			return true;
-		}
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
+        }
+        public IActionResult Schedule(string subcourtId, SubcourtResponse ressub)
+        {
 
-	}
+            //check session account
+            AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+            if (sessAcount == null || sessAcount.result.role == "admin")
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            //get schedule by query
+            SlotResponse res = null;
+            string resJsonStr = string.Empty;
+            string link = ConfigAppSetting.Api_Link + "slots/schedule/" + subcourtId;
+
+            resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+            //
+            res = JsonConvert.DeserializeObject<SlotResponse>(resJsonStr);
+            //
+            Dictionary<string, List<SlotModel>> mappingSlotToTime = new Dictionary<string, List<SlotModel>>();
+            foreach (SlotModel slotModel in res?.result)
+            {
+                string key = slotModel.startTime.ToString(@"hh\:mm") + "-" + slotModel.endTime.ToString(@"hh\:mm");
+
+                if (!mappingSlotToTime.Keys.Contains(key))
+                {
+                    mappingSlotToTime.Add(key, new List<SlotModel> { slotModel });
+                }
+                else
+                {
+                    mappingSlotToTime[key].Add(slotModel);
+                }
+            }
+            SubCourtAllModel model = new SubCourtAllModel();
+            return RedirectToAction("Subcourt", "Owner", new { courtID = "", resall = model });
+            //
+            //return View(res);
+            //
+        }
+
+    }
 }
