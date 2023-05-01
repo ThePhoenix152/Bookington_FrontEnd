@@ -58,12 +58,14 @@
                     {
                         <tr>
                             <th>@item.Id</th>
-                            <th>@item.RoleName
-                                    @*<select name="role" id="role">
-                                        <option value="admin">Admin</option>
-                                        <option value="user">User</option>
-                                        <option value="owner">Owner</option>
-                                    </select>*@
+                            <th >                   
+                                <select>
+                                    <option value="none" selected disabled hidden>@item.RoleName</option>
+                                    <option value="admin">admin</option>
+                                    <option value="owner">owner</option>
+                                    <option value="customer">customer</option>
+                                </select>
+                                    <button class="btn-dark" onclick="changerole()">Change</button>  
                             </th>
                             <th>@item.Phone</th>
                                 <th>
@@ -190,4 +192,5 @@
             SetPageNumAndSizeU(@Model.pagination.currentPage, @Model.pagination.maxPageSize);
         };
     </script>
+    
 }

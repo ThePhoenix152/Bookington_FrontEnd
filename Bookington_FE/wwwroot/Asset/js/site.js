@@ -7,6 +7,8 @@ var _idSubCourt_del = "";
 //for search count
 var _currentPage = parseInt(0);
 var _pageSize = parseInt(10);
+var _idSlot = "";
+var _idSubCourt_detail = "";
 
 function UserLogin() {
 
@@ -282,7 +284,7 @@ function DeleteSubCourt(sid, uname) {
     $('#delsubcourtmodal').modal("show");
 }
 function ConfirmSCDel() {
-
+    _idCourt_detail = id
     //
     jQuery.ajax({
         url: "https://localhost:7216/Owner/DeleteSubCourt?id=" + _idSubCourt_del,
@@ -290,11 +292,43 @@ function ConfirmSCDel() {
         cache: false,
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                RedirectToLink("https://localhost:7216/Owner/Subcourt");
+                RedirectToLink('https://localhost:7216/Owner/Subcourt?courtID=' + _idCourt_detail);
                 /*alert("delete user success!");*/
             }
             else {
                 alert("delete court failed!");
+            }
+        }
+    })
+}
+function SetStatusSlot(val) {
+    $('#statusSl span').text(val);
+}
+function ShowModalEditSlot(slotid, price, active) {
+    _idSlot = slotid;
+    $('#priceslot').val(price);
+    if (active == true)
+        $('#statusSl span').text('true');
+    else
+        $('#statusSl span').text('false');
+    $('#editslot').modal("show");
+}
+function ConfirmEditSlot() {
+    var id = _idSlot;
+    var price = $('#priceslot').val();
+    var status = $('#statusSl span').text();
+    jQuery.ajax({
+        url: "https://localhost:7216/Owner/UpdateSlot?id=" + id + "&price=" + price + "&status=" + status + "&idsubcourt=" + _idSubCourt_detail,
+        type: "GET",
+        cache: false,
+        success: function Redirect(dataOut) {
+            if (dataOut == true) {
+                alert("update slot success!");
+                $('#editslot').modal("hide");
+                /*alert("delete user success!");*/
+            }
+            else {
+                alert("update slot failed!");
             }
         }
     })

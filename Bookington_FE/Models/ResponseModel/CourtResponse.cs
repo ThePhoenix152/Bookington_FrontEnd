@@ -25,6 +25,7 @@
 		public string OwnerId { get; set; } = null!;
 
 		public string DistrictName { get; set; } = null!;
+		public string ProvinceName { get; set; } = null!;
 
 		public string Name { get; set; } = null!;
 

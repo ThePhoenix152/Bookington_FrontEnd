@@ -17,8 +17,6 @@
         public TimeSpan endTime { get; set; }
         public string daysInSchedule { get; set; }
         public double price { get; set; }
-
-
         public bool IsActive { get; set; }
     
     }

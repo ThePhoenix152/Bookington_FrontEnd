@@ -179,7 +179,7 @@ namespace Bookington_FE.Controllers
             }
         }
         
-        public bool UpdateAccount(string id, string name, string dob)
+        public bool UpdateAccount(string id, string role)
         {
             string resJsonStr;
             try
@@ -188,7 +188,7 @@ namespace Bookington_FE.Controllers
                 AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
                 // 
                 string link = ConfigAppSetting.Api_Link + "accounts/" + id;
-                UpdateAccountRequest request = new UpdateAccountRequest() { fullName = name, dateOfBirth = dob };
+                UpdateAccountRequest request = new UpdateAccountRequest() { /*fullName = name, dateOfBirth = dob*/ };
 				StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
                 resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
 				new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, "");
@@ -229,6 +229,7 @@ namespace Bookington_FE.Controllers
 			}
 			return true;
 		}
+        
 
 	}
 }

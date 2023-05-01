@@ -10,6 +10,7 @@
 <section>
     <div id="ManageYard" class="tabcontent" style="display:block">
         <h3>Manage Court</h3>
+        <button class="btn-dark"> Add a new Court</button>
         <div class="input-group" style="width:30%">
             <input type="search" id="searchCourtTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
             <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
@@ -62,15 +63,23 @@
                                 <th>@item.OpenAt</th>
                                 <th>@item.CloseAt</th>
                                 <th>
-                                    <button class="btn btn-primary" onclick="UpdateCourt('@item.Id','@item.OwnerId','@item.DistrictName','@item.Name','@item.Address','@item.OpenAt','@item.CloseAt')">Edit</button>
-                                    <button class="btn btn-danger" onclick="DeleteCourt('@item.Id','@item.Name')">Delete</button>
-@*                                    <button class="btn btn-success" onclick="DetailCourt('@item.Id')">Details</button>
-*@                                    @using (Html.BeginForm("SubCourt", "Owner", new {courtID = item.Id}, FormMethod.Post))
-                                    {
-                                        <button class="btn btn-success" type="submit">
-                                            Detail
-                                        </button>
-                                    }
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <button class="btn btn-primary" onclick="UpdateCourt('@item.Id','@item.OwnerId','@item.DistrictName','@item.Name','@item.Address','@item.OpenAt','@item.CloseAt')">Edit</button>
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-danger" onclick="DeleteCourt('@item.Id','@item.Name')">Delete</button>
+                                        </div>
+                                        <div class="col-4">
+                                            @using (Html.BeginForm("SubCourt", "Owner", new { courtID = item.Id }, FormMethod.Post))
+                                            {
+                                                <button class="btn btn-success" type="submit">
+                                                    Detail
+                                                </button>
+                                            }
+                                        </div>                                        
+                                    </div>
+                                    
 
                                 </th>
 

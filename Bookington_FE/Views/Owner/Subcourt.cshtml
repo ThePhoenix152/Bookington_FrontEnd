@@ -74,14 +74,15 @@
 
 <section>
     <div id="ManageYard" class="tabcontent" style="display:block">
-        <h3>Court Detail</h3>
-        <p>Open Time: 8:00</p>
-        <p>Close Time: 22:00</p>
-        <p>Address: Số 152, đường quốc lộ 13.</p>
+        
         @*<div class="input-group" style="width:30%">
         <input type="search" id="searchCourtTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
         <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
         </div>*@
+        <h2>Court: @Model.courtParent.Name</h2>
+        <h5>Address: @Model.courtParent.Address, @Model.courtParent.DistrictName</h5>
+        <h5>Open At: @Model.courtParent.OpenAt</h5>
+        <h5>Close At: @Model.courtParent.CloseAt</h5>
         <h3>Subcourt of court</h3>
         <table id="example" class="table table-striped" style="width:100%">
             <thead>
@@ -124,7 +125,7 @@
                     if (!item.subcourtModel.IsDeleted)
                     {
                         @*Detail Subcourt*@
-                        <div class="modal fade" id="@item.subcourtModel.Id" style="margin-top:100px">
+                        <div class="modal fade" id="@item.subcourtModel.Id" style="margin-top:0px">
                             <div class="modal-dialog modal-fullscreen">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -165,17 +166,14 @@
                                                                                 var sss = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "monday").FirstOrDefault();
                                                                                 if (sss != null)
                                                                                 {
-                                                                                    <th>
+                                                                                    <th onclick="ShowModalEditSlot('@sss.Id','@sss.price',@sss.IsActive.ToString().ToLower())">
                                                                                     Price: @sss.price.ToString()
-                                                                                    @if(@sss.IsActive = true)
-                                                                                        {
+                                                                                    @if(sss.IsActive==true){
                                                                                             <p>Active</p>
-                                                                                            ;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            <p>InActive</p>
-                                                                                            ;
+                                                                                        <p>Inactive</p>
                                                                                         }
                                                                                     </th>
                                                                                 }
@@ -190,16 +188,16 @@
                                                                                 var ss3 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "tuesday").FirstOrDefault();
                                                                                 if (ss3 != null)
                                                                                 {
-                                                                                    <th>
+                                                                                    <th onclick="ShowModalEditSlot('@ss3.Id','@ss3.price',@ss3.IsActive.ToString().ToLower())">
                                                                                         Price: @ss3.price.ToString()
-                                                                                        @if (@ss3.IsActive = true)
+                                                                                        @if (ss3.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
                                                                                             ;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            <p>InActive</p>
+                                                                                            <p>Inactive</p>
                                                                                             ;
                                                                                         }
                                                                                     </th>
@@ -215,16 +213,16 @@
                                                                                 var ss4 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "wednesday").FirstOrDefault();
                                                                                 if (ss4 != null)
                                                                                 {
-                                                                                    <th>
+                                                                                    <th onclick="ShowModalEditSlot('@ss4.Id','@ss4.price',@ss4.IsActive.ToString().ToLower())">
                                                                                         Price: @ss4.price.ToString()
-                                                                                        @if (@ss4.IsActive = true)
+                                                                                        @if (ss4.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
                                                                                             ;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            <p>InActive</p>
+                                                                                            <p>Inactive</p>
                                                                                             ;
                                                                                         }
                                                                                     </th>
@@ -240,16 +238,16 @@
                                                                                 var ss5 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "thursday").FirstOrDefault();
                                                                                 if (ss5 != null)
                                                                                 {
-                                                                                    <th>
+                                                                                    <th onclick="ShowModalEditSlot('@ss5.Id','@ss5.price',@ss5.IsActive.ToString().ToLower())">
                                                                                         Price: @ss5.price.ToString()
-                                                                                        @if (@ss5.IsActive = true)
+                                                                                        @if (ss5.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
                                                                                             ;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            <p>InActive</p>
+                                                                                            <p>Inactive</p>
                                                                                             ;
                                                                                         }
                                                                                     </th>
@@ -265,16 +263,16 @@
                                                                                 var ss6 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "friday").FirstOrDefault();
                                                                                 if (ss6 != null)
                                                                                 {
-                                                                                    <th>
+                                                                                    <th onclick="ShowModalEditSlot('@ss6.Id','@ss6.price',@ss6.IsActive.ToString().ToLower())">
                                                                                         Price: @ss6.price.ToString()
-                                                                                        @if (@ss6.IsActive = true)
+                                                                                        @if (ss6.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
                                                                                             ;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            <p>InActive</p>
+                                                                                            <p>Inactive</p>
                                                                                             ;
                                                                                         }
                                                                                     </th>
@@ -290,16 +288,16 @@
                                                                                 var ss7 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "saturday").FirstOrDefault();
                                                                                 if (ss7 != null)
                                                                                 {
-                                                                                    <th>
+                                                                                    <th onclick="ShowModalEditSlot('@ss7.Id','@ss7.price',@ss7.IsActive.ToString().ToLower())">
                                                                                         Price: @ss7.price.ToString()
-                                                                                        @if(@ss7.IsActive = true)
+                                                                                        @if(ss7.IsActive == true)
                                                                                         {
                                                                                         <p>Active</p>
                                                                                         ;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                        <p>InActive</p>
+                                                                                        <p>Inactive</p>
                                                                                         ;
                                                                                         }
                                                                                     </th>
@@ -314,16 +312,16 @@
                                                                                 var ss8 = sl.Value.Where(ite => ite.daysInSchedule.ToLower() == "sunday").FirstOrDefault();
                                                                                 if (ss8 != null)
                                                                                 {
-                                                                                    <th>
+                                                                                    <th onclick="ShowModalEditSlot('@ss8.Id','@ss8.price',@ss8.IsActive.ToString().ToLower())">
                                                                                         Price: @ss8.price.ToString()
-                                                                                        @if (@ss8.IsActive = true)
+                                                                                        @if (ss8.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
                                                                                             ;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            <p>InActive</p>
+                                                                                            <p>Inactive</p>
                                                                                             ;
                                                                                         }
                                                                                     </th>
@@ -756,7 +754,52 @@
                         Are you sure to delete subcourt <span></span>?
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmCDel()">OK</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmSCDel()">OK</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="CancelRemove">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        @*Update Slot schedule*@
+        <div class="modal fade" id="editslot" style="margin-top:100px">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Slot Schedule</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-4">Price: </div>
+                            <div class="col-4">
+                                <input type="text" id="priceslot" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">Active: </div>
+                            <div class="col-4">
+                                <label class="dropdownc">
+
+                                    <div class="dd-button" id="statusSl">
+                                        <span>true</span>
+                                    </div>
+
+                                    <input type="checkbox" class="dd-input" id="test">
+
+                                    <ul class="dd-menu">
+                                        <li onclick="SetStatusSlot('true')">true</li>
+                                        <li onclick="SetStatusSlot('false')">false</li>
+                                    </ul>
+
+                                </label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkRemove" onclick="ConfirmEditSlot()">OK</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="CancelRemove">Cancel</button>
                     </div>
                 </div>

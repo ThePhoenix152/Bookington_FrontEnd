@@ -3,5 +3,6 @@
     public static class KeySession
     {
         public const string _CURRENACCOUNT = "Currenacount";
+        public const string _COURT = "Currentcourt";
     }
 }

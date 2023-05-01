@@ -12,6 +12,7 @@ using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Linq;
+using static System.Reflection.Metadata.BlobBuilder;
 
 
 namespace Bookington_FE.Controllers
@@ -60,7 +61,7 @@ namespace Bookington_FE.Controllers
             //
             return View(sessAcount);
         }
-        public IActionResult History()
+        public IActionResult History(string searchText = "", int currentPage = 1, int pageSize = 10)
         {
 
             //check session account
@@ -69,8 +70,49 @@ namespace Bookington_FE.Controllers
             {
                 return RedirectToAction("Login", "Home");
             }
+            //getCourt by query
+            transactionResponse res = null;
+            string resJsonStr = string.Empty;
+            try
+            {
+                string link = ConfigAppSetting.Api_Link + "transaction-history/owner";
+                string param = "";
+                if (!string.IsNullOrEmpty(searchText))
+                {
+                    param = "SearchText=" + searchText;
+                }
+                //
+                if (currentPage > 0)
+                {
+                    if (!string.IsNullOrEmpty(param))
+                        param += "&PageNumber=" + currentPage;
+                    else
+                        param += "PageNumber=" + currentPage;
+                }
+                //
+                if (pageSize > 0)
+                {
+                    if (!string.IsNullOrEmpty(param))
+                        param += "&MaxPageSize=" + pageSize;
+                    else
+                        param += "MaxPageSize=" + pageSize;
+                }
+                //
+                if (!string.IsNullOrEmpty(param))
+                    link += "?" + param;
+                resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+                //
+                res = JsonConvert.DeserializeObject<transactionResponse>(resJsonStr);
+                //
+                //luu lai session
+                new SessionController(HttpContext).SetSession(KeySession._COURT, res);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             //
-            return View(sessAcount);
+            return View(res);
         }
         public IActionResult ManageYard(string searchText = "", int currentPage = 1, int pageSize = 10)
         {
@@ -114,6 +156,9 @@ namespace Bookington_FE.Controllers
                 resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
                 //
                 res = JsonConvert.DeserializeObject<CourtResponse>(resJsonStr);
+                //
+                //luu lai session
+                new SessionController(HttpContext).SetSession(KeySession._COURT, res);
             }
             catch (Exception ex)
             {
@@ -167,6 +212,13 @@ namespace Bookington_FE.Controllers
             {
                 return RedirectToAction("Login", "Home");
             }
+            //
+            CourtResponse arrCourt = new SessionController(HttpContext).GetSessionT<CourtResponse>(KeySession._COURT);
+            CourtModel parentCourt = (from x in arrCourt.result
+                                      where x.Id.ToLower() == courtID.ToLower()
+                                      select x).FirstOrDefault();
+            //
+
             //getCourt by query
             SubcourtResponse res = null;
             string resJsonStr = string.Empty;
@@ -217,6 +269,9 @@ namespace Bookington_FE.Controllers
                 }
                 //
                 resAll.SubCourtDetails = subcourtDetails;
+                //
+                resAll.courtParent = parentCourt;
+                //
                 return View(resAll);
             }
             catch (Exception ex)
@@ -330,6 +385,7 @@ namespace Bookington_FE.Controllers
             return true;
         }
         public IActionResult Schedule(string subcourtId, SubcourtResponse ressub)
+        
         {
 
             //check session account
@@ -367,6 +423,19 @@ namespace Bookington_FE.Controllers
             //return View(res);
             //
         }
-
+        public bool UpdateSlot(string id, double price, bool status, string idsubcourt)
+        {
+            //
+            AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+            //PUT/ slots​ / updateSlot​ / ref -subCourt
+            string link = ConfigAppSetting.Api_Link + "slots​/updateSlot​/ref-subCourt?subCourtId="+idsubcourt;
+            //loại bỏ ký tự không gian có độ dài = 0
+            link = link.Replace("\u200B", "");
+            UpdateSlotRequest request = new UpdateSlotRequest() { Id = id, Price = price, IsActive = status};
+            string jscontent = JsonConvert.SerializeObject(request);
+            StringContent content = new StringContent(jscontent, Encoding.UTF8, "application/json");
+            string resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
+            return true;
+        }
     }
 }
