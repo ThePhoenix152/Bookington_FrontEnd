@@ -1,9 +1,9 @@
 ﻿var _idUser_del = "";
 var _idCourt_del = "";
-var _idUser_up = "";
 var _idCourt_up = "";
 var _idCourt_detail = "";
 var _idSubCourt_del = "";
+var _idCourtreport = "";
 //for search count
 var _currentPage = parseInt(0);
 var _pageSize = parseInt(10);
@@ -76,14 +76,7 @@ function ConfirmDel() {
 }
 
 
-function UpdateUser(uid, uname, udob) {
-    debugger
-    _idUser_up = uid;
-    //
-    ('#inputUpUserName').val(uname);
-    ('#inputUpUserDOB').val(udob);
-  ('#upusermodal').modal("show");
-}
+
 function Update() {
     var nameUser_up = $('#inputUpUserName').val();
     var dobUser_up = $('#inputUpUserDOB').val();
@@ -332,4 +325,30 @@ function ConfirmEditSlot() {
             }
         }
     })
+}
+
+function changerole(id) {
+    
+    var roleid = $('#role').val();
+    jQuery.ajax({
+        url: "https://localhost:7216/Admin/UpdateAccount?id=" + id + "&role=" + roleid,
+        type: "GET",
+        cache: false,
+        success: function Redirect(dataOut) {
+            if (dataOut == true) {
+                alert("update role success!");                            
+            }
+            else {
+                alert("update role failed!");
+            }
+        }
+    })
+}
+
+function SetStatusCourt(val) {
+    $('#isbancourt span').text(val);
+}
+function ShowModalBan(id) {
+    _idCourtreport = id;
+    $('#bancourt').modal("show");
 }

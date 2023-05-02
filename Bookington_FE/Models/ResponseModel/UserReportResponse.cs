@@ -10,12 +10,20 @@
 
     public class UserReportModel
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; }
 
-        public string RefUser { get; set; } = null!;
+        public string RefUser { get; set; }
 
-        public string ReporterId { get; set; } = null!;
+        public string RefUserName { get; set; }
 
-        public string Content { get; set; } = null!;
+        public string ReporterId { get; set; }
+
+        public string ReporterCourtName { get; set; }
+
+        public string Content { get; set; }
+
+        public bool IsResponded { get; set; }
+
+        public bool IsBan { get; set; }
     }
 }

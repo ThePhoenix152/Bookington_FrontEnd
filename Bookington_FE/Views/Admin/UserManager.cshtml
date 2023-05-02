@@ -59,13 +59,13 @@
                         <tr>
                             <th>@item.Id</th>
                             <th >                   
-                                <select>
+                                <select id="role">
                                     <option value="none" selected disabled hidden>@item.RoleName</option>
-                                    <option value="admin">admin</option>
-                                    <option value="owner">owner</option>
-                                    <option value="customer">customer</option>
+                                    <option value="1">admin</option>
+                                    <option value="2">owner</option>
+                                    <option value="3">customer</option>
                                 </select>
-                                    <button class="btn-dark" onclick="changerole()">Change</button>  
+                                    <button class="btn-dark" onclick="changerole('@item.Id')">Change</button>  
                             </th>
                             <th>@item.Phone</th>
                                 <th>

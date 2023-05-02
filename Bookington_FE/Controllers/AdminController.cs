@@ -3,9 +3,7 @@ using Bookington_FE.Models.RequestModel;
 using Bookington_FE.Models.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using NuGet.Configuration;
-using System.Data;
-using System.Numerics;
+using System.Net.Http.Json;
 using System.Text;
 
 namespace Bookington_FE.Controllers
@@ -39,10 +37,10 @@ namespace Bookington_FE.Controllers
 
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "onwer")
+            if (sessAcount == null || sessAcount.result.role != "admin")
             {
                 return RedirectToAction("Login", "Home");
-            } 
+            }
             //getUser by query
             AccountResponse res = null;
             string resJsonStr = string.Empty;
@@ -108,14 +106,14 @@ namespace Bookington_FE.Controllers
                 throw ex;
             }
             //
-            return View(res?.result);
+            return View(res);
         }
         public IActionResult ManageUserReport()
         {
 
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "owner")
+            if (sessAcount == null || sessAcount.result.role != "admin")
             {
                 return RedirectToAction("Login", "Home");
             }
@@ -133,7 +131,7 @@ namespace Bookington_FE.Controllers
                 throw ex;
             }
             //
-            return View(res?.result);
+            return View(res);
         }
         public IActionResult Profile()
         {
@@ -178,7 +176,7 @@ namespace Bookington_FE.Controllers
                 //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
             }
         }
-        
+
         public bool UpdateAccount(string id, string role)
         {
             string resJsonStr;
@@ -187,13 +185,46 @@ namespace Bookington_FE.Controllers
                 //check session account
                 AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
                 // 
-                string link = ConfigAppSetting.Api_Link + "accounts/" + id;
-                UpdateAccountRequest request = new UpdateAccountRequest() { /*fullName = name, dateOfBirth = dob*/ };
-				StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                string link = ConfigAppSetting.Api_Link + "accounts/assignRole?userId=" + id + "&roleId=" + role;
+                //loại bỏ ký tự không gian có độ dài = 0
+                link = link.Replace("\u200B", "");
+                UpdateRoleRequest request = new UpdateRoleRequest() { RoleId = role };
+				string jscontent = JsonConvert.SerializeObject(request);
+				StringContent content = new StringContent(jscontent, Encoding.UTF8, "application/json");
                 resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
-				new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, "");
+                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, "");
 
-			}
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
+        }
+        
+
+        public bool UpdateProfile(string name, string dob)
+        {
+            string resJsonStr;
+            try
+            {
+                //check session account
+                AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+                string id = sessAcount.result.userId;
+                // 
+                string link = ConfigAppSetting.Api_Link + "accounts/" + id;
+                UpdateAccountRequest request = new UpdateAccountRequest() { fullName = name, dateOfBirth = dob };
+                StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
+                //
+                //if success
+                sessAcount.profileRead.DateOfBirth = DateTime.ParseExact(dob, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                sessAcount.profileRead.FullName = name;
+                sessAcount.result.fullName = name;
+                //
+                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, sessAcount);
+
+            }
             catch (Exception ex)
             {
                 throw ex;
@@ -201,35 +232,6 @@ namespace Bookington_FE.Controllers
             return true;
         }
 
-		public bool UpdateProfile(string name, string dob)
-		{
-			string resJsonStr;
-			try
-			{
-				//check session account
-				AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-                string id = sessAcount.result.userId;
-				// 
-				string link = ConfigAppSetting.Api_Link + "accounts/" + id;
-				UpdateAccountRequest request = new UpdateAccountRequest() { fullName = name, dateOfBirth = dob };
-				StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-				resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
-                //
-                //if success
-                sessAcount.profileRead.DateOfBirth = DateTime.ParseExact(dob, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
-                sessAcount.profileRead.FullName = name;
-                sessAcount.result.fullName = name;
-				//
-				new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, sessAcount);
 
-			}
-			catch (Exception ex)
-			{
-				throw ex;
-			}
-			return true;
-		}
-        
-
-	}
+    }
 }

@@ -8,6 +8,7 @@ using NuGet.Configuration;
 using NuGet.Protocol;
 using System.Collections.Generic;
 using System.Net;
+using System.Reflection;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Text;
@@ -173,7 +174,7 @@ namespace Bookington_FE.Controllers
 
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "admin")
+            if (sessAcount == null || sessAcount.result.role != "owner")
             {
                 return RedirectToAction("Login", "Home");
             }
@@ -208,7 +209,7 @@ namespace Bookington_FE.Controllers
 
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "admin")
+            if (sessAcount == null || sessAcount.result.role != "owner")
             {
                 return RedirectToAction("Login", "Home");
             }
@@ -385,7 +386,7 @@ namespace Bookington_FE.Controllers
             return true;
         }
         public IActionResult Schedule(string subcourtId, SubcourtResponse ressub)
-        
+
         {
 
             //check session account
@@ -428,14 +429,47 @@ namespace Bookington_FE.Controllers
             //
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
             //PUT/ slots​ / updateSlot​ / ref -subCourt
-            string link = ConfigAppSetting.Api_Link + "slots​/updateSlot​/ref-subCourt?subCourtId="+idsubcourt;
+            string link = ConfigAppSetting.Api_Link + "slots​/updateSlot​/ref-subCourt?subCourtId=" + idsubcourt;
             //loại bỏ ký tự không gian có độ dài = 0
             link = link.Replace("\u200B", "");
-            UpdateSlotRequest request = new UpdateSlotRequest() { Id = id, Price = price, IsActive = status};
+            UpdateSlotRequest request = new UpdateSlotRequest() { Id = id, Price = price, IsActive = status };
             string jscontent = JsonConvert.SerializeObject(request);
             StringContent content = new StringContent(jscontent, Encoding.UTF8, "application/json");
             string resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
             return true;
         }
+        public IActionResult Booking(string subcourtId, SubcourtResponse ressub)
+        {
+            AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+            if (sessAcount == null || sessAcount.result.role == "admin")
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            //get schedule by query
+            BookingResponse res = null;
+            string resJsonStr = string.Empty;
+            string link = ConfigAppSetting.Api_Link + "booking-history/sub-courts?SubCourtId=" + subcourtId;
+
+            resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+            //
+            res = JsonConvert.DeserializeObject<BookingResponse>(resJsonStr);
+            //
+            Dictionary<string, List<BookingModel>> mappingSlotToTime = new Dictionary<string, List<BookingModel>>();
+            foreach (BookingModel bookingModel in res?.result)
+            {
+                string key = bookingModel.startTime.ToString(@"hh\:mm") + "-" + bookingModel.endTime.ToString(@"hh\:mm");
+
+                if (!mappingSlotToTime.Keys.Contains(key))
+                {
+                    mappingSlotToTime.Add(key, new List<BookingModel> { bookingModel });
+                }
+                else
+                {
+                    mappingSlotToTime[key].Add(bookingModel);
+                }
+            }
+            SubCourtAllModel model = new SubCourtAllModel();
+            return RedirectToAction("Subcourt", "Owner", new { courtID = "", resall = model });
+        }
     }
-}
+    }

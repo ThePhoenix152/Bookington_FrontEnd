@@ -24,4 +24,9 @@
 
 		public TimeSpan CloseAt { get; set; } = TimeSpan.Zero;
 	}
+
+    public class UpdateRoleRequest
+    {
+        public string RoleId { get; set; }= string.Empty;
+    }
 }
