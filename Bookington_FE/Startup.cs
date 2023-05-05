@@ -54,7 +54,7 @@ namespace Bookington_FE
             //
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider("D:\\NewWeb\\Bookington_FE\\Bookington_FE\\wwwroot\\Asset"),
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "wwwroot", "Asset")),
                 RequestPath = "/Asset"
             });
             app.UseEndpoints(endpoints =>
