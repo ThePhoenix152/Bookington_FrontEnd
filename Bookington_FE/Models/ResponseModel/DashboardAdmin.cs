@@ -1,6 +1,6 @@
 ﻿namespace Bookington_FE.Models.ResponseModel
 {
-    public class BookingResponse
+    public class DashboardAdmin
     {
         public List<BookingModel> result { get; set; } = new List<BookingModel>();
         public int statusCode { get; set; }
@@ -9,13 +9,14 @@
     }
 
 
-    public class BookingModel
+    public class DashboardAModel
     {
-        public string Id { get; set; }
+        public int totalOrders { get; set; }
 
-        public TimeSpan startTime { get; set; }
-        public TimeSpan endTime { get; set; }
-        public string daysInSchedule { get; set; }
+        public int paidOrders { get; set; }
+        public int cancelOrder { get; set; }
+        public int refundedOrders { get; set; }
+        public int totalSales { get; set; }
         public double Price { get; set; }
         public bool IsActive { get; set; }
 

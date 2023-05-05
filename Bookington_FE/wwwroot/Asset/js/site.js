@@ -143,7 +143,6 @@ function ConfirmCDel() {
     })
 }
 function UpdateCourt(cid, coid, cdid, cname, caddress, copen, cclose) {
-    debugger
     _idCourt_up = cid;
     //
     $('#inputUpCourtOwnerID').val(coid)
@@ -155,7 +154,7 @@ function UpdateCourt(cid, coid, cdid, cname, caddress, copen, cclose) {
     $('#upcourtmodal').modal("show");
 }
 function UpdateC() {
-    var ownerIDCourt_up = $('#inputUpCourtOwnerID').val();
+    
     var districtIDCourt_up = $('inputUpCourtDistrictID').val()
     var nameCourt_up = $('#inputUpCourtName').val()
     var addressCourt_up = $('inputUpCourtAddress').val();
@@ -351,4 +350,61 @@ function SetStatusCourt(val) {
 function ShowModalBan(id) {
     _idCourtreport = id;
     $('#bancourt').modal("show");
+}
+function showCreateCourt() {
+    $('#createcourtmodal').modal("show")
+    
+}
+function showCreateSCourt() {
+    $('#createscourtmodal').modal("show")
+    
+}
+function SetDistrict() {
+    var id = $('#selectProvince').val();
+    //remove option
+    $('#districtselect option').remove();
+    jQuery.ajax({
+        url: "https://localhost:7216/Owner/GetDistrictByProvince?id=" + id,
+        type: "GET",
+        cache: false,
+        success: function SetOptionDistrict(data) {
+            for (let i = 0; i < data.length; i++) {
+                $('#districtselect').append('<option value="' + data[i].id + '">' + data[i].districtName + '</option>');
+            }
+        }
+    })
+}
+function CreateC() {
+    var nameCourt_create = $('#inputNewCourtName').val();
+    var district = $('#districtselect').val();
+    var addressCourt_create = $('#inputCreateCourtAddress').val();
+    var descriptionCourt_create = $('#inputCreateCourtdescription').val();
+    var openCourt_create = $('#inputCreateCourtOpen').val();
+    var closeCourt_create = $('#inputCreateCourtClose').val();
+    var image = $("#formFileMultiple").val();
+    jQuery.ajax({
+        url: "https://localhost:7216/Owner/CreateCourt",
+        type: "POST",
+        cache: false,
+        data: {
+            name: nameCourt_create,
+            district: district,
+            address: addressCourt_create,
+            description: descriptionCourt_create,
+            open: openCourt_create,
+            close: closeCourt_create,
+            image: image
+        },
+        success: function Redirect(dataOut) {
+            if (dataOut == true) {
+                /*RedirectToLink("https://localhost:7216/Owner/ManageYard");*/
+                alert("Update court successfully!");
+                /*alert("delete user success!");*/
+            }
+            else {
+                alert("Update court failed!");
+            }
+        }
+    })
+
 }

@@ -16,10 +16,10 @@
 							  <th>Reporter Phone</th>
 							  <th>Reportter Name</th>
 							  <th>Content</th>
-								<th>Status</th>
+							  <th>Status</th>
 							  <th>Is response</th>
-
-
+							  <th>Is Ban</th>
+							  <th>Action</th>
 						  </tr>
 					  </thead>
 					  <tbody>
@@ -29,8 +29,8 @@
                                   <th>@item.Id</th>
                                   <th>@item.CourtName</th>
                                   <th>@item.ReporterPhone</th>
-									<th>@item.ReporterName</th>
-									<th>@item.Content</th>
+								  <th>@item.ReporterName</th>
+								  <th>@item.Content</th>
                                   <th>
 										@if(item.IsBan == true)
 										{
@@ -50,6 +50,9 @@
 										{
 											<p>Not Response</p>
 										}
+								  </th>
+								  <th>
+									  <button class="btn btn-primary"> Ban </button>
 								  </th>
                                   
 								  

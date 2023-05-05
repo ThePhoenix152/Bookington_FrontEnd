@@ -49,13 +49,13 @@
             <h2>HELLO OWNER</h2>
 
             <div class="tab">
-                @using (Html.BeginForm("Dashboard", "Owner", FormMethod.Post))
+                @*@using (Html.BeginForm("Dashboard", "Owner", FormMethod.Post))
                 {
                     <button type="submit">
                         <i class="fa-solid fa-table-columns"></i>
                         Dashboard
                     </button>
-                }
+                }*@
                 @using (Html.BeginForm("History", "Owner", FormMethod.Post))
                 {
                     <button type="submit">
@@ -79,20 +79,20 @@
                         Manage Court
                     </button>
                 }
-                @using (Html.BeginForm("Chat", "Owner", FormMethod.Post))
+                @*@using (Html.BeginForm("Chat", "Owner", FormMethod.Post))
                 {
                     <button type="submit">
                         <i class="fa-solid fa-comment"></i>
                         Chat
                     </button>
-                }
-                @using (Html.BeginForm("Competition", "Owner", FormMethod.Post))
+                }*@
+                @*@using (Html.BeginForm("Competition", "Owner", FormMethod.Post))
                 {
                     <button type="submit">
                         <i class="fa-regular fa-handshake"></i>
-                        Competition
+                        Upcomming Match
                     </button>
-                }
+                }*@
                 @using (Html.BeginForm("Logout", "Owner", FormMethod.Post))
                 {
                     <button type="submit">

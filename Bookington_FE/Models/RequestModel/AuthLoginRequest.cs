@@ -29,4 +29,31 @@
     {
         public string RoleId { get; set; }= string.Empty;
     }
+
+    public class CreateCourtRequest
+    {
+        public string? Id { get; set; }
+
+        public string? Name { get; set; }
+
+        public string? DistrictName { get; set; }
+
+        public string? ProvinceName { get; set; }
+
+        public string? Address { get; set; }
+
+        public string? Description { get; set; }
+
+
+
+
+
+        public TimeSpan? OpenAt { get; set; }
+
+        public TimeSpan? CloseAt { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public IFormFile CourtPictures { get; set; }
+    }
 }

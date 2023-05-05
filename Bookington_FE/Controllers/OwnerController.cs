@@ -4,10 +4,12 @@ using Bookington_FE.Models.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
+using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Protocol;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
@@ -165,6 +167,8 @@ namespace Bookington_FE.Controllers
             {
                 throw ex;
             }
+            //
+            ViewData["province"] = new SessionController(HttpContext).GetSessionT<List<ProvinceInfo>>(KeySession._PROVINCE);
             //
             return View(res);
         }
@@ -471,5 +475,80 @@ namespace Bookington_FE.Controllers
             SubCourtAllModel model = new SubCourtAllModel();
             return RedirectToAction("Subcourt", "Owner", new { courtID = "", resall = model });
         }
+        public List<DistrictModel> GetDistrictByProvince(string id = "0")
+        {
+            AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+            //
+            List<DistrictModel> ressult = new List<DistrictModel>();
+            string resDistrict = GlobalFunc.CallAPI(ConfigAppSetting.Api_Link + "districts/province?id=" + id, null, MethodHttp.GET, sessAcount.result.sysToken);
+            DistrictResponse dis = JsonConvert.DeserializeObject<DistrictResponse>(resDistrict);
+            //
+            return dis.result;
+        }
+        public bool CreateCourt(string name, string district, string address, string description, string open, string close, string image)
+        {
+
+            string resJsonStr;
+            try
+            {
+                //check session account
+                AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+                // 
+                string link = ConfigAppSetting.Api_Link + "courts/";
+#if DEBUG
+                image = "D:\\NewWeb\\Bookington_FE\\Bookington_FE\\wwwroot\\images\\" + Path.GetFileName(image);
+#endif
+                byte[] imgData = System.IO.File.ReadAllBytes(image);
+                //
+                HttpClientHandler clientHandler = new HttpClientHandler();
+                clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+                using (var client = new HttpClient(clientHandler))
+                {
+                    client.BaseAddress = new Uri(link);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + sessAcount.result.sysToken);
+                    client.Timeout = new TimeSpan(0, 0, 30);
+#if DEBUG
+                    client.Timeout = new TimeSpan(0, 10, 00);
+#endif
+                    //
+                    MultipartFormDataContent form = new MultipartFormDataContent();
+
+                    form.Add(new StringContent(sessAcount.result.userId), "OwnerId");
+                    form.Add(new StringContent(district), "DistrictId");
+                    form.Add(new StringContent(name), "Name");
+                    form.Add(new StringContent(address), "Address");
+                    form.Add(new StringContent(description), "Description");
+                    form.Add(new StringContent(open), "OpenAt");
+                    form.Add(new StringContent(close), "CloseAt");
+                    form.Add(new ByteArrayContent(imgData, 0, imgData.Length), "courtImages");
+                    HttpResponseMessage response;
+                    response = client.PostAsync("", form).Result;
+
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        resJsonStr = response.Content.ReadAsStringAsync().Result;
+                    }
+                    else
+                    {
+                        resJsonStr = response.Content.ReadAsStringAsync().Result;
+                    }
+                }
+
+
+                //string link = ConfigAppSetting.Api_Link + "accounts/" + id;
+                //resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.POST, sessAcount.result.sysToken);
+                //
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
+            }
+            return true;
+        }
     }
-    }
+}

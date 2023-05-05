@@ -10,7 +10,7 @@
 <section>
     <div id="ManageYard" class="tabcontent" style="display:block">
         <h3>Manage Court</h3>
-        <button class="btn-dark"> Add a new Court</button>
+        <button class="btn btn-primary" style="padding: 5px; margin-bottom:10px" onclick="showCreateCourt()">Add a new court</button>
         <div class="input-group" style="width:30%">
             <input type="search" id="searchCourtTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
             <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
@@ -226,7 +226,81 @@
     </div>
 </div>
 
+<div class="modal fade" id="createcourtmodal" style="margin-top:20px">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Court</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                `
+            </div>
 
+            <div class="modal-body" id="nameCourtUpdate" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="small mb-1" for="inputNewCourtName">Name</label>
+                    <input class="form-control" id="inputNewCourtName" type="text" placeholder="Enter court's name" value="">
+                </div>
+            </div>
+            <div class="modal-body" id="NewProvinceId" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="small mb-1" for="inputUpCourtProvince">Province</label>
+                    <select class="form-control" onchange="SetDistrict()" id="selectProvince">
+                        @foreach (var ite in ViewData["province"] as IList<ProvinceInfo>)
+                        {
+                            <option value="@ite.id">@ite.provinceName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-body" id="NewDistrictId" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="small mb-1" for="inputUpCourtDistrict">District</label>
+                    <select class="form-control" id="districtselect">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-body" id="NewAddress" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="small mb-1" for="inputCreateCourtAddress">Address</label>
+                    <input class="form-control" id="inputCreateCourtAddress" type="text" placeholder="Enter court's address" value="">
+                </div>
+            </div>
+            <div class="modal-body" id="description" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="small mb-1" for="inputCreateCourtdescription">Description</label>
+                    <input class="form-control" id="inputCreateCourtdescription" type="text" placeholder="Enter court's description" value="">
+                </div>
+            </div>
+            
+            
+            
+            <div class="modal-body" id="OpenCourtCreatedate" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="small mb-1" for="inputCreateCourtOpen">Open Time</label>
+                    <input class="form-control" id="inputCreateCourtOpen" type="text" placeholder="Enter court's open time" value="">
+                </div>
+            </div>
+            <div class="modal-body" id="CloseCourtCreatedate" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="small mb-1" for="inputCreateCourtClose">Close Time</label>
+                    <input class="form-control" id="inputCreateCourtClose" type="text" placeholder="Enter court's close time" value="">
+                </div>
+            </div>
+            <div class="modal-body" id="CloseCourtCreatedate" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="form-label" for="formFileMultiple">Court Images</label>
+                    <input class="form-control" type="file" id="formFileMultiple" multiple />
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkCreate()" onclick="CreateC()">Create</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="Cancel">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 <div class="modal fade" id="subcourtmodal" style="margin-top:100px">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">

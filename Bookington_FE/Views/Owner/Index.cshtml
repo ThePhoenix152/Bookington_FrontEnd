@@ -4,8 +4,17 @@
 }
 @using Bookington_FE.Models.ResponseModel;
 @model AuthLoginResponse;
-<h1>HELLO @Model.result.fullName</h1>
-<div class="container">
+
+<section>
+    <div class="tabcontent">
+        <div id="Index" class="clearfix" style="display:block">
+            <h1>Welcome Owner: @Model.result.fullName</h1>
+            <img src="/asset/images/badminton-abstract-concept-vector-illustration-2g293wp.jpg" width="50%" height="50%">
+            
+        </div>
+    </div>
+</section>
+@*<div class="container">
     <div class="row p-1">
         <div class="col-1">User</div>
         <div class="col-5"><input type="text" id="userInput" /></div>
@@ -36,4 +45,4 @@
     </div>
 </div>
 <script src="~/Asset/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/Asset/js/chat.js"></script>
+<script src="~/Asset/js/chat.js"></script>*@

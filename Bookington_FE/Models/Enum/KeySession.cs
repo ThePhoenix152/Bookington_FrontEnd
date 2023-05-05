@@ -4,5 +4,6 @@
     {
         public const string _CURRENACCOUNT = "Currenacount";
         public const string _COURT = "Currentcourt";
+        public const string _PROVINCE = "CurrentProvice";
     }
 }

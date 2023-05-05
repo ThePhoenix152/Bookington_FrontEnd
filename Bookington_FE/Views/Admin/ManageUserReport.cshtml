@@ -13,10 +13,10 @@
 						  <tr>
 							  <th>ID</th>
 							  <th>User Name</th>
-							  <th>Reporter</th>
 							  <th>Reporter Name</th>
 							  <th>Content</th>
 							  <th>Is Reponded</th>
+							  <th>Action</th>
 						
 
 						  </tr>
@@ -29,8 +29,7 @@
                                   <th>@item.RefUserName</th>
                                   <th>@item.ReporterCourtName</th>
                                   <th>@item.Content</th>
-									
-									<th>
+								  <th>
 										@if (item.IsResponded == true)
 										{
 											<p>Responded</p>
@@ -39,7 +38,8 @@
 										{
 											<p>Not Response</p>
 										}
-									</th>
+								  </th>
+						<th><button class="btn btn-primary"> Ban </button></th>
 								  </tr>
 						}
 					  </tbody>

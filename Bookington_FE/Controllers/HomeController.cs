@@ -76,6 +76,11 @@ namespace Bookington_FE.Controllers
                     //
                     //
                     new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, res);
+                    //
+                    //đọc api lay tinh thanh
+                    string resProvince = GlobalFunc.CallAPI(ConfigAppSetting.Api_Link + "province/getAll", null, MethodHttp.GET, res.result.sysToken);
+                    ProvinceResponse province = JsonConvert.DeserializeObject<ProvinceResponse>(resProvince);
+                    new SessionController(HttpContext).SetSession(KeySession._PROVINCE, province.result);
                 }
                 //
                 return resJsonStr;
