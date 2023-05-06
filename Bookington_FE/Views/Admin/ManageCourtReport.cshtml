@@ -51,7 +51,7 @@
 										}
 								  </th>
 								  <th>
-									  <button class="btn btn-primary"> Ban </button>
+                            <button class="btn btn-primary" onclick="ShowModalBanC(@item.RefCourt)"> Ban </button>
 								  </th>
                                   
 								  
@@ -61,6 +61,62 @@
 					  
 				  </table>
 			</div>
+    <div class="modal fade" id="bancourt" style="margin-top:20px">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Update Court</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    `
+                </div>
+
+
+                
+                <div class="modal-body" id="1" style="padding: 0 11px 0 11px">
+                    <div>
+                        <label class="small mb-1" for="inputUpCourtName">Name</label>
+                        <input class="form-control" id="inputUpCourtName" type="text" placeholder="Enter court's name" value="">
+                    </div>
+                </div>
+                <div class="modal-body" id="2" style="padding: 0 11px 0 11px">
+                    <div>
+                        <label class="small mb-1" for="inputUpCourtAddress">Address</label>
+                        <input class="form-control" id="inputUpCourtAddress" type="text" placeholder="Enter court's address" value="">
+                    </div>
+                </div>
+                <div class="modal-body" id="3" style="padding: 0 11px 0 11px">
+                    <div>
+                        <label class="small mb-1" for="inputUpCourtDescription">Description</label>
+                        <input class="form-control" id="inputUpCourtDescription" type="text" placeholder="Enter court's description" value="">
+                    </div>
+                </div>
+                <div class="modal-body" id="4" style="padding: 0 11px 0 11px">
+                    <div>
+                        <label class="small mb-1" for="inputUpCourtOpen">Open Time</label>
+                        <input class="form-control" id="inputUpCourtOpen" type="text" placeholder="Enter court's open time" value="">
+                    </div>
+                </div>
+                <div class="modal-body" id="5" style="padding: 0 11px 0 11px">
+                    <div>
+                        <label class="small mb-1" for="inputUpCourtClose">Close Time</label>
+                        <input class="form-control" id="inputUpCourtClose" type="text" placeholder="Enter court's close time" value="">
+                    </div>
+                </div>
+                <div class="modal-body" id="6" style="padding: 0 11px 0 11px">
+                    <div>
+                        <label class="form-label" for="formFileMultipleup">Court Images</label>
+                        <input class="form-control" type="file" id="formFileMultipleup" multiple />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkUpdate" onclick="UpdateC()">OK</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="Cancel">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 
 </section>

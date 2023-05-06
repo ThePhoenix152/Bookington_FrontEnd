@@ -4,9 +4,9 @@
     {
         public string parentCourtId { get; set; } 
         public string name { get; set; } 
-        public string courtTypeId { get; set; } 
-        public string isActive { get; set; } 
-        public string isDeleted { get; set; }
+        public int courtTypeId { get; set; } 
+        public bool isActive { get; set; } 
+        public bool isDeleted { get; set; }
         
     }
 }

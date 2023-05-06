@@ -629,9 +629,11 @@ namespace Bookington_FE.Controllers
                 //check session account
                 AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
                 //
-                string link = ConfigAppSetting.Api_Link + "courts";
-                SubcourtResquest request = new SubcourtResquest() { parentCourtId = id, name = nameSC, courtTypeId = typeid, isActive = scstatus, isDeleted = scdelete };
-                StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                string link = ConfigAppSetting.Api_Link + "subcourts";
+                SubcourtResquest request = new SubcourtResquest() { parentCourtId = id, name = nameSC, courtTypeId = Convert.ToInt32(typeid), isActive = Convert.ToBoolean(scstatus), isDeleted = Convert.ToBoolean(scdelete) };
+                List<SubcourtResquest> arrRe = new List<SubcourtResquest>() { request };
+                string jsrequest = JsonConvert.SerializeObject(arrRe);
+                StringContent content = new StringContent(jsrequest, Encoding.UTF8, "application/json");
                 resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.POST, sessAcount.result.sysToken);
             }
             catch (Exception ex)

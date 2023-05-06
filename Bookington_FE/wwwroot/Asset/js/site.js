@@ -11,6 +11,7 @@ var _idSlot = "";
 var _idSubCourt_detail = "";
 var _idCourtParent = "";
 var _idCourtOw_up = coid = "";
+var _idBanC = "";
 
 function UserLogin() {
 
@@ -166,13 +167,13 @@ function SetDistrictup() {
 function UpdateC() {
     var cid = _idCourt_up
     var coid = _idCourtOw_up
-    var districtIDCourt_up = $('districtselectup').val()
+    var districtIDCourt_up = $('#districtselectup').val()
     var nameCourt_up = $('#inputUpCourtName').val()
-    var addressCourt_up = $('inputUpCourtAddress').val();
-    var desCourt_up = $('inputUpCourtDescription').val();
-    var openCourt_up = $('inputUpCourtOpen').val();
-    var closeCourt_up = $('inputUpCourtClose').val();
-    var images = $('formFileMultipleup').val();
+    var addressCourt_up = $('#inputUpCourtAddress').val();
+    var desCourt_up = $('#inputUpCourtDescription').val();
+    var openCourt_up = $('#inputUpCourtOpen').val();
+    var closeCourt_up = $('#inputUpCourtClose').val();
+    var images = $('#formFileMultipleup').val();
     jQuery.ajax({
         url: "https://localhost:7216/Owner/UpdateCourt",
         type: "POST",
@@ -180,12 +181,12 @@ function UpdateC() {
         data: {
             cid: cid,
             coid: coid,
-            district: districtIDCourt_up,
-            name: nameCourt_up,
-            address: addressCourt_up,
+            cdid: districtIDCourt_up,
+            cname: nameCourt_up,
+            caddress: addressCourt_up,
             des: desCourt_up,
-            open: openCourt_up,
-            close: closeCourt_up,
+            copen: openCourt_up,
+            cclose: closeCourt_up,
             image: images
         },
         success: function Redirect(dataOut) {
@@ -369,7 +370,7 @@ function changerole(id) {
 function SetStatusCourt(val) {
     $('#isbancourt span').text(val);
 }
-function ShowModalBan(id) {
+function ShowModalBanC(id) {
     _idCourtreport = id;
     $('#bancourt').modal("show");
 }
@@ -382,6 +383,7 @@ function showCreateSCourt(id) {
     _idCourtParent = id;
     
 }
+
 function SetDistrict() {
     var id = $('#selectProvince').val();
     //remove option
