@@ -7,14 +7,18 @@ using Newtonsoft.Json;
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Protocol;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Linq;
+using static System.Formats.Asn1.AsnWriter;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Reflection.Metadata.BlobBuilder;
 
 
@@ -37,39 +41,58 @@ namespace Bookington_FE.Controllers
         {
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "admin")
+            if (sessAcount == null || sessAcount.result.role != "owner")
             {
                 return;// RedirectToAction("Login", "Home");
             }
             //call query notify
             try
             {
-                string link = ConfigAppSetting.Api_Link + "notifications?UserId=" + sessAcount.result.userId + "&PageNumber=1&MaxPageSize=1000";
+                string link = ConfigAppSetting.Api_Link + "notifications?UserId=" + sessAcount.result.userId;
 
                 string resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                throw ex;
 
             }
+
         }
         public IActionResult Dashboard()
         {
-            //check session account
-            AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "admin")
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            //
-            return View(sessAcount);
-        }
+			//check session account
+			AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+			if (sessAcount == null || sessAcount.result.role != "owner")
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			//getCourt by query
+			DashboardOwnerResponse res = null;
+			string resJsonStr = string.Empty;
+			try
+			{
+               
+				string link = ConfigAppSetting.Api_Link + "dashboard/owner?ownerId=" + sessAcount.result.userId;
+				resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+				res = JsonConvert.DeserializeObject<DashboardOwnerResponse>(resJsonStr);
+				//
+				//luu lai session
+				new SessionController(HttpContext).SetSession(KeySession._COURT, res);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			//
+			return View(res);
+		}
         public IActionResult History(string searchText = "", int currentPage = 1, int pageSize = 10)
         {
 
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "admin")
+            if (sessAcount == null || sessAcount.result.role != "owner")
             {
                 return RedirectToAction("Login", "Home");
             }
@@ -312,7 +335,7 @@ namespace Bookington_FE.Controllers
                 //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
             }
         }
-        public bool UpdateCourt(string id, string coid, string cdid, string cname, string caddress, TimeSpan copen, TimeSpan cclose)
+        public bool UpdateCourt(string cid, string coid, string cdid, string cname, string caddress, string des, string copen, string cclose, string image)
         {
             string resJsonStr;
             try
@@ -320,10 +343,50 @@ namespace Bookington_FE.Controllers
                 //check session account
                 AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
                 // 
-                string link = ConfigAppSetting.Api_Link + "courts/" + id;
-                UpdateCourtRequest request = new UpdateCourtRequest() { OwnerId = coid, DistrictId = cdid, Name = cname, Address = caddress, OpenAt = copen, CloseAt = cclose };
-                StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-                resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
+                string link = ConfigAppSetting.Api_Link + "courts/" + cid;
+#if DEBUG
+                
+                image = "D:\\NewWeb\\Bookington_FE\\Bookington_FE\\wwwroot\\images\\" + Path.GetFileName(image);
+#endif
+                byte[] imgData = System.IO.File.ReadAllBytes(image);
+                //
+                HttpClientHandler clientHandler = new HttpClientHandler();
+                clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+                using (var client = new HttpClient(clientHandler))
+                {
+                    client.BaseAddress = new Uri(link);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + sessAcount.result.sysToken);
+                    client.Timeout = new TimeSpan(0, 0, 30);
+#if DEBUG
+                    client.Timeout = new TimeSpan(0, 10, 00);
+#endif
+                    //
+                    MultipartFormDataContent form = new MultipartFormDataContent();
+                    form.Add(new StringContent(cid), "id");
+                    form.Add(new StringContent(sessAcount.result.userId), "OwnerId");
+                    form.Add(new StringContent(cdid), "DistrictId");
+                    form.Add(new StringContent(cname), "Name");
+                    form.Add(new StringContent(caddress), "Address");
+                    form.Add(new StringContent(des), "Description");
+                    form.Add(new StringContent(copen), "OpenAt");
+                    form.Add(new StringContent(cclose), "CloseAt");
+                    form.Add(new ByteArrayContent(imgData, 0, imgData.Length), "courtImages");
+                    HttpResponseMessage response;
+                    response = client.PutAsync("", form).Result;
+
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        resJsonStr = response.Content.ReadAsStringAsync().Result;
+                    }
+                    else
+                    {
+                        resJsonStr = response.Content.ReadAsStringAsync().Result;
+                    }
+                }
+
 
                 //string link = ConfigAppSetting.Api_Link + "accounts/" + id;
                 //resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.POST, sessAcount.result.sysToken);
@@ -336,7 +399,14 @@ namespace Bookington_FE.Controllers
                 //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
             }
             return true;
+
+            //string link = ConfigAppSetting.Api_Link + "accounts/" + id;
+            //resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.POST, sessAcount.result.sysToken);
+            //
+
         }
+
+
         public IActionResult Search()
         {
             return View();
@@ -550,5 +620,28 @@ namespace Bookington_FE.Controllers
             }
             return true;
         }
+        public bool CreateSCourt(string id, string nameSC, string typeid, string scstatus, string scdelete)
+        {
+
+            string resJsonStr;
+            try
+            {
+                //check session account
+                AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+                //
+                string link = ConfigAppSetting.Api_Link + "courts";
+                SubcourtResquest request = new SubcourtResquest() { parentCourtId = id, name = nameSC, courtTypeId = typeid, isActive = scstatus, isDeleted = scdelete };
+                StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.POST, sessAcount.result.sysToken);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                //throw new Exception(ex.Message + "\r\n" + ex.StackTrace);
+            }
+            return true;
+        }
+
+
     }
 }

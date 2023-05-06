@@ -9,10 +9,10 @@
 <section>
     <div id="ManageUsers" class="tabcontent" style="display:block">
         <h3>Manage Users</h3>
-        <div class="input-group" style="width:30%">
+        @*<div class="input-group" style="width:30%">
             <input type="search" id="searchCourtTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
             <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
-        </div>
+        </div>*@
         <div class="row">
             <div class="col-9">Total court: @Model.pagination.totalCount</div>
             <div class="col-2">Page Size:</div>
@@ -61,7 +61,6 @@
                             <th >                   
                                 <select id="role">
                                     <option value="none" selected disabled hidden>@item.RoleName</option>
-                                    <option value="1">admin</option>
                                     <option value="2">owner</option>
                                     <option value="3">customer</option>
                                 </select>

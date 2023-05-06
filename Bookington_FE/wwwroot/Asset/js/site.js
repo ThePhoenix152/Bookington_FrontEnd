@@ -9,6 +9,8 @@ var _currentPage = parseInt(0);
 var _pageSize = parseInt(10);
 var _idSlot = "";
 var _idSubCourt_detail = "";
+var _idCourtParent = "";
+var _idCourtOw_up = coid = "";
 
 function UserLogin() {
 
@@ -119,7 +121,6 @@ function UpdateProfile() {
 }
 
 function DeleteCourt(uid, uname) {
-    debugger
     _idCourt_del = uid;
     $('#nameCourtDel span').text(uname);
     $('#delcourtmodal').modal("show");
@@ -142,29 +143,51 @@ function ConfirmCDel() {
         }
     })
 }
-function UpdateCourt(cid, coid, cdid, cname, caddress, copen, cclose) {
+function UpdateCourt(cid, coid) {
     _idCourt_up = cid;
-    //
-    $('#inputUpCourtOwnerID').val(coid)
-    $('#inputUpCourtName').val(cname)
-    $('inputUpCourtDistrictID').val(cdid)
-    $('inputUpCourtAddress').val(caddress)
-    $('#inputUpCourtOpen').val(copen)
-    $('#inputUpCourtClose').val(cclose)
+    _idCourtOw_up = coid
     $('#upcourtmodal').modal("show");
 }
+function SetDistrictup() {
+    var id = $('#selectProvinceup').val();
+    //remove option
+    $('#districtselectup option').remove();
+    jQuery.ajax({
+        url: "https://localhost:7216/Owner/GetDistrictByProvince?id=" + id,
+        type: "GET",
+        cache: false,
+        success: function SetOptionDistrictup(data) {
+            for (let i = 0; i < data.length; i++) {
+                $('#districtselectup').append('<option value="' + data[i].id + '">' + data[i].districtName + '</option>');
+            }
+        }
+    })
+}
 function UpdateC() {
-    
-    var districtIDCourt_up = $('inputUpCourtDistrictID').val()
+    var cid = _idCourt_up
+    var coid = _idCourtOw_up
+    var districtIDCourt_up = $('districtselectup').val()
     var nameCourt_up = $('#inputUpCourtName').val()
     var addressCourt_up = $('inputUpCourtAddress').val();
+    var desCourt_up = $('inputUpCourtDescription').val();
     var openCourt_up = $('inputUpCourtOpen').val();
     var closeCourt_up = $('inputUpCourtClose').val();
+    var images = $('formFileMultipleup').val();
     jQuery.ajax({
         url: "https://localhost:7216/Owner/UpdateCourt",
         type: "POST",
         cache: false,
-        data: { id: _idCourt_up, coid: ownerIDCourt_up, district: districtIDCourt_up, name: nameCourt_up, address: addressCourt_up, open: openCourt_up, close: closeCourt_up },
+        data: {
+            cid: cid,
+            coid: coid,
+            district: districtIDCourt_up,
+            name: nameCourt_up,
+            address: addressCourt_up,
+            des: desCourt_up,
+            open: openCourt_up,
+            close: closeCourt_up,
+            image: images
+        },
         success: function Redirect(dataOut) {
             if (dataOut == true) {
                 RedirectToLink("https://localhost:7216/Owner/ManageYard");
@@ -270,7 +293,6 @@ function DetailSubCourt(id) {
 }
 
 function DeleteSubCourt(sid, uname) {
-    debugger
     _idSubCourt_del = sid;
     $('#nameSubCourtDel span').text(uname);
     $('#delsubcourtmodal').modal("show");
@@ -355,8 +377,9 @@ function showCreateCourt() {
     $('#createcourtmodal').modal("show")
     
 }
-function showCreateSCourt() {
+function showCreateSCourt(id) {
     $('#createscourtmodal').modal("show")
+    _idCourtParent = id;
     
 }
 function SetDistrict() {
@@ -397,12 +420,41 @@ function CreateC() {
         },
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                /*RedirectToLink("https://localhost:7216/Owner/ManageYard");*/
-                alert("Update court successfully!");
+                alert("Create court successfully!");
                 /*alert("delete user success!");*/
             }
             else {
-                alert("Update court failed!");
+                alert("Create court failed!");
+            }
+        }
+    })
+
+}
+function CreateSC() {
+    var id = _idCourtParent;
+    var nameSCourt_create = $('#nameSCCreate').val();
+    var courttypeid = $('#courttypeID').val();
+    var SCIsactive = $('#SCisactive').val();
+    var SCIsDelete = $('#SCisdelete').val();
+    
+    jQuery.ajax({
+        url: "https://localhost:7216/Owner/CreateSCourt",
+        type: "POST",
+        cache: false,
+        data: {
+            id: id,
+            nameSC: nameSCourt_create,
+            typeid: courttypeid,
+            scstatus: SCIsactive,
+            scdelete: SCIsDelete
+        },
+        success: function Redirect(dataOut) {
+            if (dataOut == true) {
+                alert("Create subcourt successfully!");
+          
+            }
+            else {
+                alert("Create subcourt failed!");
             }
         }
     })
