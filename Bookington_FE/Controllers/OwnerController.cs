@@ -30,7 +30,7 @@ namespace Bookington_FE.Controllers
         {
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "admin")
+            if (sessAcount == null || sessAcount.result.role != "owner")
             {
                 return RedirectToAction("Login", "Home");
             }

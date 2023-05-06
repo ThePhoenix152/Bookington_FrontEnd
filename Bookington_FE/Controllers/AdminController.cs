@@ -25,13 +25,31 @@ namespace Bookington_FE.Controllers
         {
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "owner")
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            //
-            return View();
-        }
+            if (sessAcount == null || sessAcount.result.role != "admin")
+				
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			//getCourt by query
+			DashboardAdmin res = null;
+			string resJsonStr = string.Empty;
+			try
+			{
+
+                string link = ConfigAppSetting.Api_Link + "dashboard/admin";
+				resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+				res = JsonConvert.DeserializeObject<DashboardAdmin>(resJsonStr);
+				//
+				//luu lai session
+				new SessionController(HttpContext).SetSession(KeySession._COURT, res);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			//
+			return View(res);
+		}
         public IActionResult UserManager(string searchText = "", int currentPage = 1, int pageSize = 10)
         {
 
