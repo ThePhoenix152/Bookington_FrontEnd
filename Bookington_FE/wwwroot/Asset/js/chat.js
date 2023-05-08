@@ -41,13 +41,13 @@ function GetNoti() {
 
     //
     jQuery.ajax({
-        url: "https://localhost:7216/Owner/GetNotify",
+        url:window.location.origin+"/Owner/GetNotify",
         type: "GET",
         cache: false
         //,
         //success: function Redirect(dataOut) {
         //    if (dataOut == true) {
-        //        RedirectToLink("https://localhost:7216/Owner/ManageYard");
+        //        RedirectToLink(window.location.origin+"/Owner/ManageYard");
         //        /*alert("delete user success!");*/
         //    }
         //    else {

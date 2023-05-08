@@ -20,7 +20,7 @@ function UserLogin() {
     var loginData = { phone: phone, password: pass };
     //
     jQuery.ajax({
-        url: "https://localhost:7216/Home/AuthAccount",
+        url: window.location.origin + "/Home/AuthAccount",
         type: "POST",
         cache: false,
         data: loginData,
@@ -29,14 +29,13 @@ function UserLogin() {
             var data = JSON.parse(dataOut);
             if (data.statusCode == 200) {
                 if (data.result.role == "admin") {
-                    //var surl = document.location.href;
-                    //surl = surl.substr(0, surl.lastIndexOf("/")) + "/Index";
-                    RedirectToLink("https://localhost:7216/Admin/Index");
+
+                    RedirectToLink(window.location.origin+"/Admin/Index");
                 }
                 else if (data.result.role == "owner") {
                     //var surl = document.location.href;
                     //surl = surl.substr(0, surl.lastIndexOf("/")) + "/Privacy";
-                    RedirectToLink("https://localhost:7216/Owner/Index");
+                    RedirectToLink(window.location.origin+"/Owner/Index");
 
                 }
             }
@@ -63,13 +62,13 @@ function ConfirmDel() {
 
     //
     jQuery.ajax({
-        url: "https://localhost:7216/Admin/DeleteAccount?id=" + _idUser_del,
+        url: window.location.origin+"/Admin/DeleteAccount?id=" + _idUser_del,
         type: "GET",
         cache: false,
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                RedirectToLink("https://localhost:7216/Admin/UserManager");
-                /*alert("delete user success!");*/
+                RedirectToLink(window.location.origin+"/Admin/UserManager");
+                
             }
             else {
                 alert("delete user failed!");
@@ -84,13 +83,13 @@ function Update() {
     var nameUser_up = $('#inputUpUserName').val();
     var dobUser_up = $('#inputUpUserDOB').val();
     jQuery.ajax({
-        url: "https://localhost:7216/Admin/UpdateAccount",
+        url: window.location.origin+"/Admin/UpdateAccount",
         type: "POST",
         cache: false,
         data: { id: _idUser_up, name: nameUser_up, dob: dobUser_up },
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                /*RedirectToLink("https://localhost:7216/Admin/UserManager");*/
+                
                 alert("Update profile successfully");
                 /*alert("delete user success!");*/
             }
@@ -104,13 +103,13 @@ function UpdateProfile() {
     var nameUser_up = $('#inputUpUserName').val();
     var dobUser_up = $('#inputUpUserDOB').val();
     jQuery.ajax({
-        url: "https://localhost:7216/Admin/UpdateProfile",
+        url:window.location.origin+"/Admin/UpdateProfile",
         type: "POST",
         cache: false,
         data: {name: nameUser_up, dob: dobUser_up },
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                /*RedirectToLink("https://localhost:7216/Admin/UserManager");*/
+                /*RedirectToLink(window.location.origin+"/Admin/UserManager");*/
                 alert("Update profile successfully");
                 /*alert("delete user success!");*/
             }
@@ -130,12 +129,12 @@ function ConfirmCDel() {
 
     //
     jQuery.ajax({
-        url: "https://localhost:7216/Owner/DeleteCourt?id=" + _idCourt_del,
+        url:window.location.origin+"/Owner/DeleteCourt?id=" + _idCourt_del,
         type: "GET",
         cache: false,
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                RedirectToLink("https://localhost:7216/Owner/ManageYard");
+                RedirectToLink(window.location.origin+"/Owner/ManageYard");
                 /*alert("delete user success!");*/
             }
             else {
@@ -154,7 +153,7 @@ function SetDistrictup() {
     //remove option
     $('#districtselectup option').remove();
     jQuery.ajax({
-        url: "https://localhost:7216/Owner/GetDistrictByProvince?id=" + id,
+        url:window.location.origin+"/Owner/GetDistrictByProvince?id=" + id,
         type: "GET",
         cache: false,
         success: function SetOptionDistrictup(data) {
@@ -175,7 +174,7 @@ function UpdateC() {
     var closeCourt_up = $('#inputUpCourtClose').val();
     var images = $('#formFileMultipleup').val();
     jQuery.ajax({
-        url: "https://localhost:7216/Owner/UpdateCourt",
+        url: window.location.origin+"/Owner/UpdateCourt",
         type: "POST",
         cache: false,
         data: {
@@ -191,7 +190,7 @@ function UpdateC() {
         },
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                RedirectToLink("https://localhost:7216/Owner/ManageYard");
+                RedirectToLink(window.location.origin+"/Owner/ManageYard");
 
                 /*alert("delete user success!");*/
             }
@@ -232,7 +231,7 @@ function btnSearchCourtClick() {
 }
 function SearchCourt() {
     var searchText = $("#searchCourtTxt").val();
-    window.location.href = 'https://localhost:7216/Owner/ManageYard?searchText=' + searchText + '&currentPage=' + _currentPage + '&pageSize=' + _pageSize;
+    window.location.href = window.location.origin+'/Owner/ManageYard?searchText=' + searchText + '&currentPage=' + _currentPage + '&pageSize=' + _pageSize;
     //jQuery.ajax({
     //    url: '@Url.Action("ManageYard", "Owner")',
     //    contentType: "application/json; charset=utf-8",
@@ -244,7 +243,7 @@ function SearchCourt() {
 
 function DetailCourt(id) {
     _idCourt_detail = id;
-    window.location.href = 'https://localhost:7216/Owner/SubCourt?courtID=' + _idCourt_detail;
+    window.location.href = window.location.origin +'/Owner/SubCourt?courtID=' + _idCourt_detail;
     /*$('#subcourtmodal').modal("show");*/
 
 }
@@ -280,7 +279,7 @@ function btnSearchUserClick() {
 }
 function SearchUser() {
     var searchText = $("#searchUserTxt").val();
-    window.location.href = 'https://localhost:7216/Admin/UserManager?searchText=' + searchText + '&currentPage=' + _currentPage + '&pageSize=' + _pageSize;
+    window.location.href = window.location.origin +'/Admin/UserManager?searchText=' + searchText + '&currentPage=' + _currentPage + '&pageSize=' + _pageSize;
 }
 
 function DetailCompe(id) {
@@ -302,12 +301,12 @@ function ConfirmSCDel() {
     _idCourt_detail = id
     //
     jQuery.ajax({
-        url: "https://localhost:7216/Owner/DeleteSubCourt?id=" + _idSubCourt_del,
+        url:window.location.origin+"/Owner/DeleteSubCourt?id=" + _idSubCourt_del,
         type: "GET",
         cache: false,
         success: function Redirect(dataOut) {
             if (dataOut == true) {
-                RedirectToLink('https://localhost:7216/Owner/Subcourt?courtID=' + _idCourt_detail);
+                RedirectToLink(window.location.origin + '/ Owner / Subcourt ? courtID = ' + _idCourt_detail);
                 /*alert("delete user success!");*/
             }
             else {
@@ -333,7 +332,7 @@ function ConfirmEditSlot() {
     var price = $('#priceslot').val();
     var status = $('#statusSl span').text();
     jQuery.ajax({
-        url: "https://localhost:7216/Owner/UpdateSlot?id=" + id + "&price=" + price + "&status=" + status + "&idsubcourt=" + _idSubCourt_detail,
+        url:window.location.origin+"/Owner/UpdateSlot?id=" + id + "&price=" + price + "&status=" + status + "&idsubcourt=" + _idSubCourt_detail,
         type: "GET",
         cache: false,
         success: function Redirect(dataOut) {
@@ -353,7 +352,7 @@ function changerole(id) {
     
     var roleid = $('#role').val();
     jQuery.ajax({
-        url: "https://localhost:7216/Admin/UpdateAccount?id=" + id + "&role=" + roleid,
+        url:window.location.origin+"/Admin/UpdateAccount?id=" + id + "&role=" + roleid,
         type: "GET",
         cache: false,
         success: function Redirect(dataOut) {
@@ -389,7 +388,7 @@ function SetDistrict() {
     //remove option
     $('#districtselect option').remove();
     jQuery.ajax({
-        url: "https://localhost:7216/Owner/GetDistrictByProvince?id=" + id,
+        url:window.location.origin+"/Owner/GetDistrictByProvince?id=" + id,
         type: "GET",
         cache: false,
         success: function SetOptionDistrict(data) {
@@ -408,7 +407,7 @@ function CreateC() {
     var closeCourt_create = $('#inputCreateCourtClose').val();
     var image = $("#formFileMultiple").val();
     jQuery.ajax({
-        url: "https://localhost:7216/Owner/CreateCourt",
+        url:window.location.origin+"/Owner/CreateCourt",
         type: "POST",
         cache: false,
         data: {
@@ -440,7 +439,7 @@ function CreateSC() {
     var SCIsDelete = $('#SCisdelete').val();
     
     jQuery.ajax({
-        url: "https://localhost:7216/Owner/CreateSCourt",
+        url:window.location.origin+"/Owner/CreateSCourt",
         type: "POST",
         cache: false,
         data: {
