@@ -4,6 +4,7 @@ var _idCourt_up = "";
 var _idCourt_detail = "";
 var _idSubCourt_del = "";
 var _idCourtreport = "";
+var _idAccountreport = "";
 //for search count
 var _currentPage = parseInt(0);
 var _pageSize = parseInt(10);
@@ -348,23 +349,7 @@ function ConfirmEditSlot() {
     })
 }
 
-function changerole(id) {
-    
-    var roleid = $('#role').val();
-    jQuery.ajax({
-        url:window.location.origin+"/Admin/UpdateAccount?id=" + id + "&role=" + roleid,
-        type: "GET",
-        cache: false,
-        success: function Redirect(dataOut) {
-            if (dataOut == true) {
-                alert("update role success!");                            
-            }
-            else {
-                alert("update role failed!");
-            }
-        }
-    })
-}
+
 
 function SetStatusCourt(val) {
     $('#isbancourt span').text(val);
@@ -459,5 +444,37 @@ function CreateSC() {
             }
         }
     })
+}
 
+
+function notiRead(id, isRead) {
+    jQuery.ajax({
+        url: window.location.origin + "/Owner/MarkAsRead",
+        type: "POST",
+        cache: false,
+        data: {
+            id: id,
+            isRead: isRead
+        },
+        success: function Redirect(dataOut) {
+            if (dataOut == true) {
+                $('#new sec') = $('sec');
+
+            }
+            else {
+                alert("Create subcourt failed!");
+            }
+        }
+    })
+}
+function BanC() {
+
+}
+function ShowModalBanC(id) {
+    _idCourtreport = id;
+    $('#bancourt').modal("show");
+}
+function ShowBanAccountModel(id) {
+    _idAccountreport = id;
+    $('#banaccount').modal("show");
 }

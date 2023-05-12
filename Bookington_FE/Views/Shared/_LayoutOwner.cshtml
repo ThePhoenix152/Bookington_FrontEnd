@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Bookington_FE.Models.ResponseModel;
+@{
+    var viewModel = (MainLayoutViewModel)ViewBag.MainLayoutViewModel;
+    //var viewModel2 = ViewData["MainLayoutViewModel"] as MainLayoutViewModel;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,31 +21,279 @@
     @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>*@
-
+    
     <title>Home</title>
 </head>
-<body>
+<body>  
     <header>
         <nav>
             <div class="logo"> BOOKINGTON </div>
-            <div class="icon" id="bell"> <img src="https://i.imgur.com/AC7dgLA.png" alt=""> </div>
-            @*<div class="notifications" id="box">
-                <h2>Notifications - <span>2</span></h2>
-                <div class="notifications-item">
-                    <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img">
-                    <div class="text">
-                        <h4>Samso aliao</h4>
-                        <p>Samso Nagaro Like your home work</p>
+            <div class="notification">
+                
+                <style>
+                    a {
+                        text-decoration: none;
+                        color: black;
+                    }
+
+                        a:visited {
+                            color: black;
+                        }
+
+                    .box::-webkit-scrollbar-track {
+                        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                        background-color: #F5F5F5;
+                        border-radius: 5px
+                    }
+
+                    .box::-webkit-scrollbar {
+                        width: 10px;
+                        background-color: #F5F5F5;
+                        border-radius: 5px
+                    }
+
+                    .box::-webkit-scrollbar-thumb {
+                        background-color: black;
+                        border: 2px solid black;
+                        border-radius: 5px
+                    }
+
+                    header {
+                        -moz-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
+                     
+                        vertical-align: middle;
+                    }
+
+                    h1 {
+                        float: left;
+                        padding: 10px 30px
+                    }
+
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        font-family: 'Raleway', sans-serif;
+                    }
+
+                    .icons {
+                        display: inline;
+                        float: right
+                    }
+
+                    .notification {
+                        padding-top: 15px;
+                        position: relative;
+                        display: inline-block;
+                    }
+
+                    .number {
+                        height: 22px;
+                        width: 22px;
+                        background-color: #d63031;
+                        border-radius: 20px;
+                        color: white;
+                        text-align: center;
+                        position: absolute;
+                        top: 10px;
+                        left: 60px;
+                        padding: 1px;
+                        border-style: solid;
+                        border-width: 2px;
+                    }
+
+                        .number:empty {
+                            display: none;
+                        }
+
+                    .notBtn {
+                        transition: 0.5s;
+                        cursor: pointer
+                    }
+
+                    .fas {
+                        font-size: 25pt;
+                        padding-bottom: 10px;
+                        color: white;
+                        margin-right: 40px;
+                        margin-left: 40px;
+                    }
+
+                    .box {
+                        width: 400px;
+                        height: 0px;
+                        border-radius: 10px;
+                        transition: 0.5s;
+                        position: absolute;
+                        overflow-y: scroll;
+                        padding: 0px;
+                        left: -300px;
+                        margin-top: 5px;
+                        background-color: #F4F4F4;
+                        -webkit-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.2);
+                        -moz-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
+                        box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
+                        cursor: context-menu;
+                    }
+
+                    .fas:hover {
+                        color: #d63031;
+                    }
+
+                    .notBtn:hover > .box {
+                        height: 60vh
+                    }
+
+                    .content {
+                        padding: 20px;
+                        color: black;
+                        vertical-align: middle;
+                        text-align: left;
+                    }
+
+                    .gry {
+                        background-color: #F4F4F4;
+                    }
+
+                    .top {
+                        color: black;
+                        padding: 10px
+                    }
+
+                    .display {
+                        position: relative;
+                    }
+
+                    .cont {
+                        position: absolute;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: #F4F4F4;
+                    }
+
+                        .cont:empty {
+                            display: none;
+                        }
+
+                    .stick {
+                        text-align: center;
+                        display: block;
+                        font-size: 50pt;
+                        padding-top: 70px;
+                        padding-left: 80px
+                    }
+
+                        .stick:hover {
+                            color: black;
+                        }
+
+                    .cent {
+                        text-align: center;
+                        display: block;
+                    }
+
+                    .sec {
+                        padding: 25px 10px;
+                        background-color: lightblue;
+                        border-style: none none solid none;
+                        border-color: slategray;                        
+                        transition: 0.5s;
+                    }
+
+
+                    .txt {
+                        vertical-align: top;
+                        font-size: 1.25rem;
+                        padding: 5px 10px 0px 115px;
+                    }
+
+                    .sub {
+                        font-size: 1rem;
+                        color: grey;
+                    }
+
+                    .new {
+                        background-color: white;
+                        
+                        border-color: red;
+                    }
+
+                    .sec:hover {
+                        background-color: #BFBFBF;
+                    }
+
+                </style>
+                <a href="#">
+                    @{
+                        int newNoti = 0;
+                        if(viewModel != null && viewModel.ArrayNotification != null && viewModel.ArrayNotification.Count > 0)
+                        {
+                            foreach (NotificationModel ite in viewModel.ArrayNotification)
+                            {
+                                if (!ite.IsRead)
+                                    newNoti += 1;
+                            }
+                        }
+                                    
+                    }
+                    <div class="notBtn" href="#">
+                        <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
+                        <div class="number">@newNoti</div>
+                        <i class="fas fa-bell"></i>
+                        <div class="box">
+                            <div class="display">
+                                <div class="nothing">
+                                    <i class="fas fa-child stick"></i>
+                                    <div class="cent">Looks Like your all caught up!</div>
+                                </div>
+                                <div class="cont">
+                                    @if(viewModel != null && viewModel.ArrayNotification != null && viewModel.ArrayNotification.Count > 0)
+                                    {
+                                        foreach(NotificationModel ite in viewModel.ArrayNotification)
+                                        {
+                                            if(!ite.IsRead)
+                                            {
+                                                
+                                                <div onclick="notiRead('@ite.Id', '@ite.IsRead')" style="cursor:pointer">
+                                                <div class="new sec">
+                                                    
+                                                            @ite.Content
+                                                            <div style="font-size: 1rem;color: grey;">
+                                                                @ite.CreateAt
+                                                            </div>
+                                                            
+
+                                                    </div>
+                                                            </div>
+                                            }
+                                            else
+                                            {
+                                                
+                                                <div class="sec">
+                                                    
+                                                            @ite.Content
+                                                            <div style="font-size: 1rem;color: grey;">
+                                                                @ite.CreateAt
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    
+                                            }
+
+                                        }
+                                    <hr>
+                                    
+                                    
+                                    }
+                                    
+                                    <!-- Fold this div and try deleting evrything inbetween -->
+                                </div>
+                                
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="notifications-item">
-                    <img src="https://img.icons8.com/flat_round/64/000000/vote-badge.png" alt="img">
-                    <div class="text">
-                        <h4>John Silvester</h4>
-                        <p>+20 vista badge earned</p>
-                    </div>
-                </div>
-            </div>*@
+                </a>
+            </div>
                 
         </nav>
     </header>

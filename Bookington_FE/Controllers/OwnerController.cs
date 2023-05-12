@@ -26,6 +26,13 @@ namespace Bookington_FE.Controllers
 {
     public class OwnerController : Controller
     {
+        public MainLayoutViewModel MainLayoutViewModel { get; set; }
+        public OwnerController() 
+        {
+            this.MainLayoutViewModel = new MainLayoutViewModel();
+            this.ViewData["MainLayoutViewModel"] = this.MainLayoutViewModel;
+        }
+
         public IActionResult Index()
         {
             //check session account
@@ -35,6 +42,8 @@ namespace Bookington_FE.Controllers
                 return RedirectToAction("Login", "Home");
             }
             //
+            GetNotify();
+            //
             return View(sessAcount);
         }
         public void GetNotify()
@@ -43,14 +52,22 @@ namespace Bookington_FE.Controllers
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
             if (sessAcount == null || sessAcount.result.role != "owner")
             {
-                return;// RedirectToAction("Login", "Home");
+                return;
             }
             //call query notify
+            NotificationResponse res = null;
+            string resJsonStr = string.Empty;
             try
             {
                 string link = ConfigAppSetting.Api_Link + "notifications?UserId=" + sessAcount.result.userId;
 
-                string resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+                resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+                res = JsonConvert.DeserializeObject<NotificationResponse>(resJsonStr);
+                if(res != null && res.result !=null && res.result.Count > 0)
+                {
+                    this.MainLayoutViewModel = new MainLayoutViewModel() { ArrayNotification = res.result };
+                    this.ViewData["MainLayoutViewModel"] = this.MainLayoutViewModel;
+                }
             }
             catch (Exception ex)
             {
@@ -644,6 +661,24 @@ namespace Bookington_FE.Controllers
             return true;
         }
 
-
+        public bool MarkAsRead(string id, bool isRead)
+        {
+            string resJsonStr;
+            try
+            {
+                AuthLoginResponse sessAccount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+                string link = ConfigAppSetting.Api_Link + "markAllAsRead";
+                UpdateNotificationRequest request = new UpdateNotificationRequest() { NotiId = id, IsRead =  isRead};
+                List<UpdateNotificationRequest> arrRe = new List<UpdateNotificationRequest>() {  request };
+                string jsrequest = JsonConvert.SerializeObject(arrRe);
+                StringContent content = new StringContent(jsrequest, Encoding.UTF8,"application/json");
+                resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAccount.result.sysToken);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
+        }
     }
 }
