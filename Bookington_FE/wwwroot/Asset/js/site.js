@@ -478,3 +478,51 @@ function ShowBanAccountModel(id) {
     _idAccountreport = id;
     $('#banaccount').modal("show");
 }
+function BanC() {
+    var banCid = _idCourtreport;
+    var content = $('#BanCContent').val();
+    var duration = $('#BanCduration').val();
+    jQuery.ajax({
+        url: window.location.origin + "/Admin/CreateCourtBan",
+        type: "POST",
+        cache: false,
+        data: {
+            banCId: banCid,
+            content: content,
+            duration: duration
+        },
+        success: function Redirect(dataOut) {
+            if (dataOut == true) {
+                alert("Create court ban successfully!");
+                /*alert("delete user success!");*/
+            }
+            else {
+                alert("Create court ban failed!");
+            }
+        }
+    })
+}
+function BanA() {
+    var banAid = _idAccountreport;
+    var content = $('#BanAContent').val();
+    var duration = $('#BanAduration').val();
+    jQuery.ajax({
+        url: window.location.origin + "/Admin/CreateAccountBan",
+        type: "POST",
+        cache: false,
+        data: {
+            banAId: banAid,
+            content: content,
+            duration: duration
+        },
+        success: function Redirect(dataOut) {
+            if (dataOut == true) {
+                alert("Create user ban successfully!");
+                /*alert("delete user success!");*/
+            }
+            else {
+                alert("Create user ban failed!");
+            }
+        }
+    })
+}
