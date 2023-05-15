@@ -65,7 +65,7 @@ namespace Bookington_FE.Controllers
                 res = JsonConvert.DeserializeObject<NotificationResponse>(resJsonStr);
                 if(res != null && res.result !=null && res.result.Count > 0)
                 {
-                    this.MainLayoutViewModel = new MainLayoutViewModel() { ArrayNotification = res.result };
+                    this.MainLayoutViewModel = new MainLayoutViewModel() { ArrayNotification = res.result.OrderByDescending(ite => ite.CreateAt).ToList() };
                     this.ViewData["MainLayoutViewModel"] = this.MainLayoutViewModel;
                 }
             }
@@ -666,10 +666,13 @@ namespace Bookington_FE.Controllers
             string resJsonStr;
             try
             {
+                if(string.IsNullOrEmpty(id)) { return true; }
+                //
+                List<string> arrid = id.Split(',').ToList();
                 AuthLoginResponse sessAccount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
                 string link = ConfigAppSetting.Api_Link + "markAllAsRead";
-                UpdateNotificationRequest request = new UpdateNotificationRequest() { NotiId = id, IsRead =  isRead};
-                List<UpdateNotificationRequest> arrRe = new List<UpdateNotificationRequest>() {  request };
+                //UpdateNotificationRequest request = new UpdateNotificationRequest() { NotiId = id, IsRead =  isRead};
+                List<string> arrRe = arrid;
                 string jsrequest = JsonConvert.SerializeObject(arrRe);
                 StringContent content = new StringContent(jsrequest, Encoding.UTF8,"application/json");
                 resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAccount.result.sysToken);
