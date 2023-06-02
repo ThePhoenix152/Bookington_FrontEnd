@@ -101,8 +101,9 @@ namespace Bookington_FE.Controllers
 			{
 				throw ex;
 			}
-			//
-			return View(res);
+            GetNotify();
+            //
+            return View(res);
 		}
         public IActionResult History(string searchText = "", int currentPage = 1, int pageSize = 10)
         {
@@ -154,6 +155,7 @@ namespace Bookington_FE.Controllers
             {
                 throw ex;
             }
+            GetNotify();
             //
             return View(res);
         }
@@ -210,6 +212,8 @@ namespace Bookington_FE.Controllers
             //
             ViewData["province"] = new SessionController(HttpContext).GetSessionT<List<ProvinceInfo>>(KeySession._PROVINCE);
             //
+            GetNotify();
+            //
             return View(res);
         }
 
@@ -222,6 +226,7 @@ namespace Bookington_FE.Controllers
             {
                 return RedirectToAction("Login", "Home");
             }
+            GetNotify();
             //
             return View(sessAcount);
         }
@@ -316,6 +321,10 @@ namespace Bookington_FE.Controllers
                 resAll.SubCourtDetails = subcourtDetails;
                 //
                 resAll.courtParent = parentCourt;
+                //
+
+                //
+                GetNotify();
                 //
                 return View(resAll);
             }
