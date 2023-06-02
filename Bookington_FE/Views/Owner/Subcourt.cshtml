@@ -74,16 +74,18 @@
 
 <section>
     <div id="ManageYard" class="tabcontent" style="display:block">
-        <button class="btn btn-primary" style="padding: 5px; margin-bottom:10px" onclick="showCreateSCourt()">Add a new subcourt</button>v
         
         @*<div class="input-group" style="width:30%">
         <input type="search" id="searchCourtTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
         <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
         </div>*@
         <h2>Court: @Model.courtParent.Name</h2>
+        <button class="btn btn-primary" style="padding: 5px; margin-bottom:10px" onclick="showCreateSCourt('@Model.courtParent.Id')">Add a new subcourt</button>
+
         <h5>Address: @Model.courtParent.Address, @Model.courtParent.DistrictName</h5>
         <h5>Open At: @Model.courtParent.OpenAt</h5>
         <h5>Close At: @Model.courtParent.CloseAt</h5>
+
         <h3>Subcourt of court</h3>
         <table id="example" class="table table-striped" style="width:100%">
             <thead>
@@ -168,7 +170,7 @@
                                                                                 if (sss != null)
                                                                                 {
                                                                                     <th onclick="ShowModalEditSlot('@sss.Id','@sss.price',@sss.IsActive.ToString().ToLower())">
-                                                                                    Price: @sss.price.ToString()
+                                                                                    Price: @sss.price.ToString("#,###")
                                                                                     @if(sss.IsActive==true){
                                                                                             <p>Active</p>
                                                                                         }
@@ -190,7 +192,7 @@
                                                                                 if (ss3 != null)
                                                                                 {
                                                                                     <th onclick="ShowModalEditSlot('@ss3.Id','@ss3.price',@ss3.IsActive.ToString().ToLower())">
-                                                                                        Price: @ss3.price.ToString()
+                                                                                        Price: @ss3.price.ToString("#,###")
                                                                                         @if (ss3.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -215,7 +217,7 @@
                                                                                 if (ss4 != null)
                                                                                 {
                                                                                     <th onclick="ShowModalEditSlot('@ss4.Id','@ss4.price',@ss4.IsActive.ToString().ToLower())">
-                                                                                        Price: @ss4.price.ToString()
+                                                                                        Price: @ss4.price.ToString("#,###")
                                                                                         @if (ss4.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -240,7 +242,7 @@
                                                                                 if (ss5 != null)
                                                                                 {
                                                                                     <th onclick="ShowModalEditSlot('@ss5.Id','@ss5.price',@ss5.IsActive.ToString().ToLower())">
-                                                                                        Price: @ss5.price.ToString()
+                                                                                        Price: @ss5.price.ToString("#,###")
                                                                                         @if (ss5.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -265,7 +267,7 @@
                                                                                 if (ss6 != null)
                                                                                 {
                                                                                     <th onclick="ShowModalEditSlot('@ss6.Id','@ss6.price',@ss6.IsActive.ToString().ToLower())">
-                                                                                        Price: @ss6.price.ToString()
+                                                                                        Price: @ss6.price.ToString("#,###")
                                                                                         @if (ss6.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -290,7 +292,7 @@
                                                                                 if (ss7 != null)
                                                                                 {
                                                                                     <th onclick="ShowModalEditSlot('@ss7.Id','@ss7.price',@ss7.IsActive.ToString().ToLower())">
-                                                                                        Price: @ss7.price.ToString()
+                                                                                        Price: @ss7.price.ToString("#,###")
                                                                                         @if(ss7.IsActive == true)
                                                                                         {
                                                                                         <p>Active</p>
@@ -314,7 +316,7 @@
                                                                                 if (ss8 != null)
                                                                                 {
                                                                                     <th onclick="ShowModalEditSlot('@ss8.Id','@ss8.price',@ss8.IsActive.ToString().ToLower())">
-                                                                                        Price: @ss8.price.ToString()
+                                                                                        Price: @ss8.price.ToString("#,###")
                                                                                         @if (ss8.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -373,7 +375,7 @@
                                                                                 {
                                                                                     
                                                                                     <th style="background-color:lawngreen; color:red">
-                                                                                        Price: @bh.Price.ToString()
+                                                                                        Price: @bh.Price.ToString("#,###")
                                                                                         @if (bh.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -396,7 +398,7 @@
                                                                                 {
                                                                                     
                                                                                     <th style="background-color:lawngreen; color:red">
-                                                                                        Price: @bh3.Price.ToString()
+                                                                                        Price: @bh3.Price.ToString("#,###")
                                                                                         @if (bh.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -418,7 +420,7 @@
                                                                                 {
                                                                                     
                                                                                     <th style="background-color:lawngreen; color:red">
-                                                                                        Price: @bh4.Price.ToString()
+                                                                                        Price: @bh4.Price.ToString("#,###")
                                                                                         @if (bh4.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -440,7 +442,7 @@
                                                                                 {
                                                                                     
                                                                                     <th style="background-color:lawngreen; color:red">
-                                                                                        Price: @bh5.Price.ToString()
+                                                                                        Price: @bh5.Price.ToString("#,###")
                                                                                         @if (bh5.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -462,7 +464,7 @@
                                                                                 {
                                                                                     
                                                                                     <th style="background-color:lawngreen; color:red">
-                                                                                        Price: @bh6.Price.ToString()
+                                                                                        Price: @bh6.Price.ToString("#,###")
                                                                                         @if (bh6.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -484,7 +486,7 @@
                                                                                 {
                                                                                     
                                                                                     <th style="background-color:lawngreen; color:red">
-                                                                                        Price: @bh7.Price.ToString()
+                                                                                        Price: @bh7.Price.ToString("#,###")
                                                                                         @if (bh7.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -506,7 +508,7 @@
                                                                                 {
                                                                                     
                                                                                     <th style="background-color:lawngreen; color:red">
-                                                                                        Price: @bh8.Price.ToString()
+                                                                                        Price: @bh8.Price.ToString("#,###")
                                                                                         @if (bh8.IsActive == true)
                                                                                         {
                                                                                             <p>Active</p>
@@ -583,7 +585,7 @@
                         <div class="row">
                             <div class="col-4">Price: </div>
                             <div class="col-4">
-                                <input type="text" id="priceslot" />
+                                <input type="text" id="priceslot" step="1.0" />
                             </div>
                         </div>
                         <div class="row">
@@ -615,46 +617,53 @@
 
             </div>
         </div>
-
+        @*Create New Subcourt*@
         <div class="modal fade" id="createscourtmodal" style="margin-top:20px">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Create Subcourt</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        `
                     </div>
 
-                    <div class="modal-body" id="nameCourtUpdate" style="padding: 0 11px 0 11px">
+                    <div class="modal-body" id="1" style="padding: 0 11px 0 11px">
                         <div>
-                            <label class="small mb-1" for="inputNewSubCourtName">Name</label>
-                            <input class="form-control" id="inputNewSubCourtName" type="text" placeholder="Enter subcourt's name" value="">
+                            <label class="small mb-1" for="nameSCCreate">Name</label>
+                            <input class="form-control" id="nameSCCreate" type="text" placeholder="Enter subcourt's name" value="">
                         </div>
                     </div>
                     
-                    <div class="modal-body" id="courttypeID" style="padding: 0 11px 0 11px">
+                    <div class="modal-body" id="2" style="padding: 0 11px 0 11px">
                         <div>
-                            <label class="small mb-1" for="inputUpCourtAddress">Court Type ID</label>
-                            <input class="form-control" id="inputUpCourtOwnerID" type="text" placeholder="Enter court type id" value="">
+                            <label class="small mb-1" for="courttypeID">Court Type ID</label>
+                            <select class="form-control" id="courttypeID">
+                                <option value="1">Acrylic</option>
+                                <option value="2">Silicon PU</option>
+                                <option value="3">Wooden</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="modal-body" id="isactive" style="padding: 0 11px 0 11px">
+                    <div class="modal-body" id="3" style="padding: 0 11px 0 11px">
                         <div>
-                            <label class="small mb-1" for="inputstatus">Status</label>
-                            <select class="form-control">
+                            <label class="small mb-1" for="SCisactive">Status</label>
+                            <select class="form-control" id="SCisactive">
                                <option value="true">Active</option>
                                <option value="false">Inactive</option>
                             </select>
                         </div>
                     </div>
-                    <div class="modal-body" id="isdelete" style="padding: 0 11px 0 11px">
+                    <div class="modal-body" id="4" style="padding: 0 11px 0 11px">
                         <div>
-                            <label class="small mb-1" for="inputstatus">Is Delete</label>
-                            <select class="form-control">
-                               <option value="true">True</option>
-                               <option value="false">False</option>
+                            <label class="small mb-1" for="SCisdelete">Is Delete</label>
+                            <select class="form-control" id="SCisdelete">
+                                <option value="false">False</option>
+                                <option value="true">True</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="OkCreate()" onclick="CreateSC()">Create</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="Cancel">Cancel</button>
                     </div>
 
 

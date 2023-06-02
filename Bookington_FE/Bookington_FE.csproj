@@ -137,9 +137,9 @@
     <Content Update="wwwroot\Asset\lib\jquery\LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\favicon.ico">
+    <!--<Content Update="wwwroot\favicon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Content>-->
     <Content Update="wwwroot\images\b2.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -29,6 +29,12 @@
     {
         public string RoleId { get; set; }= string.Empty;
     }
+    public class UpdateNotificationRequest
+    {
+        public string NotiId { get;set; } = string.Empty;
+        public bool IsRead { get; set; } = false;
+
+    }
 
     public class CreateCourtRequest
     {

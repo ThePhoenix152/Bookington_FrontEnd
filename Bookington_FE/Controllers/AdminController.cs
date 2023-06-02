@@ -3,6 +3,7 @@ using Bookington_FE.Models.RequestModel;
 using Bookington_FE.Models.ResponseModel;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Data;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -25,13 +26,31 @@ namespace Bookington_FE.Controllers
         {
             //check session account
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "owner")
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            //
-            return View();
-        }
+            if (sessAcount == null || sessAcount.result.role != "admin")
+				
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			//getCourt by query
+			DashboardAdmin res = null;
+			string resJsonStr = string.Empty;
+			try
+			{
+
+                string link = ConfigAppSetting.Api_Link + "dashboard/admin";
+				resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
+				res = JsonConvert.DeserializeObject<DashboardAdmin>(resJsonStr);
+				//
+				//luu lai session
+				new SessionController(HttpContext).SetSession(KeySession._COURT, res);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			//
+			return View(res);
+		}
         public IActionResult UserManager(string searchText = "", int currentPage = 1, int pageSize = 10)
         {
 
@@ -231,7 +250,50 @@ namespace Bookington_FE.Controllers
             }
             return true;
         }
+        public bool CreateCourtBan(string banCId, string content, int duration)
+        {
+            string resJsonStr;
+            try
+            {
+                AuthLoginResponse sessAccount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+                // 
+                string link = ConfigAppSetting.Api_Link + "bookington/reports/courtreports/handle";
+                CourtReportResponseWriteDTO banC = new CourtReportResponseWriteDTO() { CourtReportId = banCId, Content = content, IsBanned = true, Duration = duration };
+                CourtReportModel status = new CourtReportModel() { IsResponded = true};
+                string jscontent = JsonConvert.SerializeObject(banC);
+                StringContent content1 = new StringContent(jscontent, Encoding.UTF8,"application/json");
+                resJsonStr = GlobalFunc.CallAPI(link, content1, MethodHttp.POST, sessAccount.result.sysToken);
+                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT,"");
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
+        }
+        public bool CreateAccountBan(string banAId, string content, int duration)
+        {
+            string resJsonStr;
+            try
+            {
+                AuthLoginResponse sessAccount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
+                // 
+                string link = ConfigAppSetting.Api_Link + "bookington/reports/userreports/handle";
+                UserReportResponseWriteDTO banA = new UserReportResponseWriteDTO() { UserReportId = banAId, Content = content, IsBanned = true, Duration = duration };
+                UserReportModel status = new UserReportModel() { IsResponded = true};
+                string jscontent = JsonConvert.SerializeObject(banA);
+                StringContent content1 = new StringContent(jscontent, Encoding.UTF8,"application/json");
+                resJsonStr = GlobalFunc.CallAPI(link, content1, MethodHttp.POST, sessAccount.result.sysToken);
+                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT,"");
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return true;
+        }
 
     }
 }

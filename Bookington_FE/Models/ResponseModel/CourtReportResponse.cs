@@ -5,6 +5,7 @@ namespace Bookington_FE.Models.ResponseModel
     public class CourtReportResponse
     {
         public List<CourtReportModel> result { get; set; } = new List<CourtReportModel>();
+        public List<CourtReportResponseWriteDTO> response { get; set; } = new List<CourtReportResponseWriteDTO>();
         public int statusCode { get; set; }
         public bool isError { get; set; } = false;
         public string message { get; set; } = string.Empty;

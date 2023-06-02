@@ -11,10 +11,10 @@
     <div id="ManageYard" class="tabcontent" style="display:block">
         <h3>Manage Court</h3>
         <button class="btn btn-primary" style="padding: 5px; margin-bottom:10px" onclick="showCreateCourt()">Add a new court</button>
-        <div class="input-group" style="width:30%">
+        @*<div class="input-group" style="width:30%">
             <input type="search" id="searchCourtTxt" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
             <button type="button" class=" btn btn-dark" onclick="btnSearchCourtClick()">search</button>
-        </div>
+        </div>*@
         <div class="row">
             <div class="col-9">Total court: @Model.pagination.totalCount</div>
             <div class="col-2">Page Size:</div>
@@ -65,7 +65,7 @@
                                 <th>
                                     <div class="row">
                                         <div class="col-4">
-                                            <button class="btn btn-primary" onclick="UpdateCourt('@item.Id','@item.OwnerId','@item.DistrictName','@item.Name','@item.Address','@item.OpenAt','@item.CloseAt')">Edit</button>
+                                            <button class="btn btn-primary" onclick="UpdateCourt('@item.Id','@item.OwnerId')">Edit</button>
                                         </div>
                                         <div class="col-4">
                                             <button class="btn btn-danger" onclick="DeleteCourt('@item.Id','@item.Name')">Delete</button>
@@ -177,7 +177,7 @@
 
     </div>
 </div>
-<div class="modal fade" id="upcourtmodal" style="margin-top:100px">
+<div class="modal fade" id="upcourtmodal" style="margin-top:20px">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -186,34 +186,59 @@
                 `
             </div>
             
-            <div class="modal-body" id="nameCourtUpdate" style="padding: 0 11px 0 11px">
+            
+            <div class="modal-body" id="NewProvinceId" style="padding: 0 11px 0 11px">
                 <div>
-                    <label class="small mb-1" for="inputUpCourtOwnerID">Owner ID</label>
-                    <input class="form-control" id="inputUpCourtOwnerID" type="text" placeholder="Enter court's name" value="">
+                    <label class="small mb-1" for="inputUpCourtProvince">Province</label>
+                    <select class="form-control" onchange="SetDistrictup()" id="selectProvinceup">
+                        @foreach (var ite in ViewData["province"] as IList<ProvinceInfo>)
+                        {
+                            <option value="@ite.id">@ite.provinceName</option>
+                        }
+                    </select>
                 </div>
             </div>
-            <div class="modal-body" id="districtIDCourtUpdate" style="padding: 0 11px 0 11px">
+            <div class="modal-body" id="NewDistrictId" style="padding: 0 11px 0 11px">
                 <div>
-                    <label class="small mb-1" for="inputUpCourtDistrictID">District ID</label>
-                    <input class="form-control" id="inputUpCourtDistrictID" type="text" placeholder="Enter court's district ID" value="">
+                    <label class="small mb-1" for="districtselectup">District</label>
+                    <select class="form-control" id="districtselectup">
+                    </select>
                 </div>
             </div>
-            <div class="modal-body" id="AddressCourtUpdate" style="padding: 0 11px 0 11px">
+            <div class="modal-body" id="1" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="small mb-1" for="inputUpCourtName">Name</label>
+                    <input class="form-control" id="inputUpCourtName" type="text" placeholder="Enter court's name" value="">
+                </div>
+            </div>
+            <div class="modal-body" id="2" style="padding: 0 11px 0 11px">
                 <div>
                     <label class="small mb-1" for="inputUpCourtAddress">Address</label>
                     <input class="form-control" id="inputUpCourtAddress" type="text" placeholder="Enter court's address" value="">
                 </div>
             </div>
-            <div class="modal-body" id="OpenCourtUpdate" style="padding: 0 11px 0 11px">
+            <div class="modal-body" id="3" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="small mb-1" for="inputUpCourtDescription">Description</label>
+                    <input class="form-control" id="inputUpCourtDescription" type="text" placeholder="Enter court's description" value="">
+                </div>
+            </div>
+            <div class="modal-body" id="4" style="padding: 0 11px 0 11px">
                 <div>
                     <label class="small mb-1" for="inputUpCourtOpen">Open Time</label>
                     <input class="form-control" id="inputUpCourtOpen" type="text" placeholder="Enter court's open time" value="">
                 </div>
             </div>
-            <div class="modal-body" id="CloseCourtUpdate" style="padding: 0 11px 0 11px">
+            <div class="modal-body" id="5" style="padding: 0 11px 0 11px">
                 <div>
                     <label class="small mb-1" for="inputUpCourtClose">Close Time</label>
                     <input class="form-control" id="inputUpCourtClose" type="text" placeholder="Enter court's close time" value="">
+                </div>
+            </div>
+            <div class="modal-body" id="6" style="padding: 0 11px 0 11px">
+                <div>
+                    <label class="form-label" for="formFileMultipleup">Court Images</label>
+                    <input class="form-control" type="file" id="formFileMultipleup" multiple />
                 </div>
             </div>
 
