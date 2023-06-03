@@ -14,8 +14,7 @@
 							  <th>ID</th>
 							  <th>User Name</th>
 							  <th>Reporter Name</th>
-                    <th>Content</th>
-                    <a href="d:\newweb\bookington_fe\bookington_fe\views\admin\profile.cshtml">d:\newweb\bookington_fe\bookington_fe\views\admin\profile.cshtml</a>
+                              <th>Content</th>
 							  <th>Is Reponded</th>
 							  <th>Action</th>
 						
@@ -31,7 +30,7 @@
                                   <th>@item.ReporterCourtName</th>
                                   <th>@item.Content</th>
 								  <th>
-										@if (item.IsResponded == true)
+										@if (item.IsBan == true)
 										{
 											<p>Responded</p>
 										}

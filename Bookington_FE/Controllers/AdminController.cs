@@ -211,7 +211,7 @@ namespace Bookington_FE.Controllers
 				string jscontent = JsonConvert.SerializeObject(request);
 				StringContent content = new StringContent(jscontent, Encoding.UTF8, "application/json");
                 resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
-                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, "");
+                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, sessAcount);
 
             }
             catch (Exception ex)
@@ -237,7 +237,7 @@ namespace Bookington_FE.Controllers
                 resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
                 //
                 //if success
-                sessAcount.profileRead.DateOfBirth = DateTime.ParseExact(dob, "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                sessAcount.profileRead.DateOfBirth = DateTime.ParseExact(dob, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
                 sessAcount.profileRead.FullName = name;
                 sessAcount.result.fullName = name;
                 //
@@ -259,11 +259,10 @@ namespace Bookington_FE.Controllers
                 // 
                 string link = ConfigAppSetting.Api_Link + "bookington/reports/courtreports/handle";
                 CourtReportResponseWriteDTO banC = new CourtReportResponseWriteDTO() { CourtReportId = banCId, Content = content, IsBanned = true, Duration = duration };
-                CourtReportModel status = new CourtReportModel() { IsResponded = true};
                 string jscontent = JsonConvert.SerializeObject(banC);
                 StringContent content1 = new StringContent(jscontent, Encoding.UTF8,"application/json");
                 resJsonStr = GlobalFunc.CallAPI(link, content1, MethodHttp.POST, sessAccount.result.sysToken);
-                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT,"");
+                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT,sessAccount);
 
             }
             catch (Exception ex)
@@ -279,13 +278,12 @@ namespace Bookington_FE.Controllers
             {
                 AuthLoginResponse sessAccount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
                 // 
-                string link = ConfigAppSetting.Api_Link + "bookington/reports/userreports/handle";
+                string link = ConfigAppSetting.Api_Link + "bookington/reports/userreports/handle/" + banAId;
                 UserReportResponseWriteDTO banA = new UserReportResponseWriteDTO() { UserReportId = banAId, Content = content, IsBanned = true, Duration = duration };
-                UserReportModel status = new UserReportModel() { IsResponded = true};
                 string jscontent = JsonConvert.SerializeObject(banA);
                 StringContent content1 = new StringContent(jscontent, Encoding.UTF8,"application/json");
                 resJsonStr = GlobalFunc.CallAPI(link, content1, MethodHttp.POST, sessAccount.result.sysToken);
-                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT,"");
+                new SessionController(HttpContext).SetSession(KeySession._CURRENACCOUNT, sessAccount);
 
             }
             catch (Exception ex)

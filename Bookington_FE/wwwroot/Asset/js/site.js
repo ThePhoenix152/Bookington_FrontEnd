@@ -120,7 +120,6 @@ function UpdateProfile() {
         }
     })
 }
-
 function DeleteCourt(uid, uname) {
     _idCourt_del = uid;
     $('#nameCourtDel span').text(uname);
@@ -174,6 +173,9 @@ function UpdateC() {
     var openCourt_up = $('#inputUpCourtOpen').val();
     var closeCourt_up = $('#inputUpCourtClose').val();
     var images = $('#formFileMultipleup').val();
+    //var file = document.querySelector('input[type=file]');
+    //var reader = new FileReader();
+    //var url = reader.readAsArrayBuffer(file);
     jQuery.ajax({
         url: window.location.origin + "/Owner/UpdateCourt",
         type: "POST",
@@ -553,6 +555,23 @@ function BanA() {
             }
             else {
                 alert("Create user ban failed!");
+            }
+        }
+    })
+}
+function changerole(id) {
+
+    var roleid = $('#role :selected').val();
+    jQuery.ajax({
+        url: window.location.origin + "/Admin/UpdateAccount?id=" + id + "&role=" + roleid,
+        type: "GET",
+        cache: false,
+        success: function Redirect(dataOut) {
+            if (dataOut == true) {
+                alert("update role success!");
+            }
+            else {
+                alert("update role failed!");
             }
         }
     })

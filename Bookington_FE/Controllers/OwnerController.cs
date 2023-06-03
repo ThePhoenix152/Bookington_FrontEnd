@@ -289,6 +289,7 @@ namespace Bookington_FE.Controllers
                     string subcourtId = sc.Id;
                     //get schedule by query
                     SlotResponse resslot = null;
+                    
                     string resslotJsonStr = string.Empty;
                     string linkslot = ConfigAppSetting.Api_Link + "slots/schedule/" + subcourtId;
 
@@ -297,6 +298,16 @@ namespace Bookington_FE.Controllers
                     resslot = JsonConvert.DeserializeObject<SlotResponse>(resslotJsonStr);
                     //
                     Dictionary<string, List<SlotModel>> mappingSlotToTime = new Dictionary<string, List<SlotModel>>();
+
+                    BookingResponse resbook = null;
+                    string resbookJsonStr = string.Empty;
+                    string linkbook = ConfigAppSetting.Api_Link + "booking-history/sub-courts?SubCourtId=" + subcourtId;
+                    List<BookingModel> bookings = new List<BookingModel>();
+
+                    resbookJsonStr = GlobalFunc.CallAPI(linkbook, null, MethodHttp.GET, sessAcount.result.sysToken);
+                    //
+                    resbook = JsonConvert.DeserializeObject<BookingResponse>(resbookJsonStr);     //
+
                     foreach (SlotModel slotModel in resslot?.result)
                     {
                         string key = slotModel.startTime.ToString(@"hh\:mm") + "-" + slotModel.endTime.ToString(@"hh\:mm");
@@ -311,10 +322,17 @@ namespace Bookington_FE.Controllers
                         }
                     }
                     //
+                   
                     SubCourtDetails dt = new SubCourtDetails();
                     dt.subcourtModel = sc;
                     dt.GroupSlotByTime = mappingSlotToTime;
+                    dt.bookingModel = bookings;
                     subcourtDetails.Add(dt);
+                    
+                    
+
+
+                    
                     //
                 }
                 //
@@ -322,7 +340,7 @@ namespace Bookington_FE.Controllers
                 //
                 resAll.courtParent = parentCourt;
                 //
-
+                
                 //
                 GetNotify();
                 //
@@ -538,39 +556,7 @@ namespace Bookington_FE.Controllers
             string resJsonStr = GlobalFunc.CallAPI(link, content, MethodHttp.PUT, sessAcount.result.sysToken);
             return true;
         }
-        public IActionResult Booking(string subcourtId, SubcourtResponse ressub)
-        {
-            AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);
-            if (sessAcount == null || sessAcount.result.role == "admin")
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            //get schedule by query
-            BookingResponse res = null;
-            string resJsonStr = string.Empty;
-            string link = ConfigAppSetting.Api_Link + "booking-history/sub-courts?SubCourtId=" + subcourtId;
-
-            resJsonStr = GlobalFunc.CallAPI(link, null, MethodHttp.GET, sessAcount.result.sysToken);
-            //
-            res = JsonConvert.DeserializeObject<BookingResponse>(resJsonStr);
-            //
-            Dictionary<string, List<BookingModel>> mappingSlotToTime = new Dictionary<string, List<BookingModel>>();
-            foreach (BookingModel bookingModel in res?.result)
-            {
-                string key = bookingModel.startTime.ToString(@"hh\:mm") + "-" + bookingModel.endTime.ToString(@"hh\:mm");
-
-                if (!mappingSlotToTime.Keys.Contains(key))
-                {
-                    mappingSlotToTime.Add(key, new List<BookingModel> { bookingModel });
-                }
-                else
-                {
-                    mappingSlotToTime[key].Add(bookingModel);
-                }
-            }
-            SubCourtAllModel model = new SubCourtAllModel();
-            return RedirectToAction("Subcourt", "Owner", new { courtID = "", resall = model });
-        }
+        
         public List<DistrictModel> GetDistrictByProvince(string id = "0")
         {
             AuthLoginResponse sessAcount = new SessionController(HttpContext).GetSessionT<AuthLoginResponse>(KeySession._CURRENACCOUNT);

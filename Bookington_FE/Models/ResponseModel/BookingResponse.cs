@@ -11,13 +11,19 @@
 
     public class BookingModel
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
-        public TimeSpan startTime { get; set; }
-        public TimeSpan endTime { get; set; }
-        public string daysInSchedule { get; set; }
-        public double Price { get; set; }
-        public bool IsActive { get; set; }
+        public string? SubCourtName { get; set; }
+
+        public string? TimeSlot { get; set; }
+
+        public string? Customer { get; set; }
+
+        public string? Phone { get; set; }
+
+        public DateTime? BookAt { get; set; }
+
+        public double? Price { get; set; }
 
     }
 }

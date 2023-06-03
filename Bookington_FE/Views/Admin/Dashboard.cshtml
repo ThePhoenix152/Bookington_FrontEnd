@@ -4,6 +4,7 @@
 }
 @using Bookington_FE.Models.ResponseModel
 @model DashboardAdmin
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <div id="Dashboard" class="tabcontent" style="display:block">
 	<div class="content-wrapper">
 		<div class="container-fluid">
@@ -92,26 +93,34 @@
 					</div>
 					
 					<div id="Order">
-						<!-- Example Pie Chart Card-->
-						<div class="card mb-3">
-							<div class="card-header">
-								<i class="fa fa-pie-chart"></i> Order
-							</div>
-							<div class="card-body">
-								
-									
+							<canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+							<script>
+								var xValues = ["paidOrders", "canceledOrders", "refundedOrders"];
+								var yValues = [@Model.result.PaidOrders, @Model.result.CanceledOrders, @Model.result.RefundedOrders];
+								var barColors = ["red", "green", "blue"];
 
-
-
-
-							</div>
-
-							<div class="card-footer small text-muted">Total Orders: @Model.result.TotalOrders</div>
-						</div>
+								new Chart("myChart", {
+									type: "bar",
+									data: {
+										labels: xValues,
+										datasets: [{
+											backgroundColor: barColors,
+											data: yValues
+										}]
+									},
+									options: {
+										legend: { display: false },
+										title: {
+											display: true,
+											text: "Order Column"
+										}
+									}
+								});
+							</script>
 						<!-- Example Notifications Card-->
 					</div>
 				</div>
-				<div class="col-lg-4">
+				@*<div class="col-lg-4">
 					<div class="card mb-3" id="noti">
 						<div class="card-header">
 							<i class="fa fa-bell-o"></i> Notification
@@ -130,7 +139,7 @@
 							</div>
 						}
 					</div>
-				</div>
+				</div>*@
 			</div>
 
 		</div>

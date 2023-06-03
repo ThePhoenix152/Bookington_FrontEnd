@@ -10,15 +10,14 @@
 	<div id="History" class="tabcontent" style="display:block">
 	<h1>Transaction</h1>
 	
-		<div class="input-group" style="width:30%">
+		@*<div class="input-group" style="width:30%">
 			<input type="search"  class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
 			<button type="button" class=" btn btn-dark" >search</button>
-		</div>
+		</div>*@
 	<table id="example" class="table table-striped" style="width:100%">
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>Order ID</th>
 				<th>From</th>
 				<th>To</th>
 				<th>Reason</th>
@@ -32,7 +31,6 @@
                     {
                             <tr>
                                 <th>@item.Id</th>
-                                <th>@item.OrderId</th>
                                 <th>@item.FromUsername</th>
                                 <th>@item.ToUsername</th>
                                 <th>@item.Reason</th>
